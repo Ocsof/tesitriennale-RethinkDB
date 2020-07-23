@@ -1,0 +1,31 @@
+﻿using prova.Model;
+using RethinkDb.Driver;
+using RethinkDb.Driver.Net;
+using RethinkDb.Driver.Net.Clustering;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace prova.Connection
+{
+    interface IConnectionPooling
+    {
+        /// <summary>
+        /// Crea nuova connessione verso il server
+        /// </summary>
+        /// <returns></returns>
+        public ConnectionPool CreateConnection();
+
+        /// <summary>
+        /// Chiusura connessione
+        /// </summary>
+        public void CloseConnection();
+
+        /// <summary>
+        /// Ritorna i Nodi Del Cluster
+        /// </summary>
+        /// <returns></returns>
+        public IList<DbOptions> GetNodi();
+     
+    }
+}
