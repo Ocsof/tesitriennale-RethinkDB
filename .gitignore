@@ -11,6 +11,8 @@
 *.log
 
 RethinkDbApp/prova/bin
+RethinkDbApp/prova/.vs/
+RethinkDbApp/prova/.obj/
 
 
 
