@@ -4,15 +4,13 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 
+  
 
 
-
-# Log files
-*.log
 
 RethinkDbApp/prova/bin
-RethinkDbApp/prova/.vs/
-RethinkDbApp/prova/.obj/
+RethinkDbApp/.vs/RethinkDbApp/v16/.suo
+RethinkDbApp/prova/obj/
 
 
 
