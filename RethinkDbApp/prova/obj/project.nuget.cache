@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4CiWFB7jHcUX8IFs4lhAC7OO/FcxOuUfL0o944WenT/VKNwbRvOgADTnX/RRQv7LWKfbtQjX65tZwLkQNn9pFw==",
+  "dgSpecHash": "QEUZyh0rlPh7QdhU6JWmmPFLE+IjBHqep+3nPHA+Re9ycF8APu1ZfcTJVPMlLk2QOP5MV6HbupdhBTRJslC8dw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\foschif\\Desktop\\Progetto\\RethinkDbApp\\prova\\RethinkDbApp.csproj",
+  "projectFilePath": "C:\\Users\\foschif\\Desktop\\rethinkdb\\RethinkDbApp\\prova\\RethinkDbApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\foschif\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
     "C:\\Users\\foschif\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\3.1.2\\microsoft.extensions.dependencyinjection.abstractions.3.1.2.nupkg.sha512",
