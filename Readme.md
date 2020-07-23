@@ -1,4 +1,5 @@
-Installare Docker Desktop
+-Installare Docker Desktop
+-Installare Visual Studio o Visual Studio Code con le "estensioni" per l'utilizzo della libreria di Bchavez per interfacciarsi con RethinkDb  
 
 Attenzione!! Su windows ho avuto problemi ad eseguire la nuova versione di Docker Desktop.
              Nel caso utilizziate Docker su sistemi Unix non ci sono problemi
