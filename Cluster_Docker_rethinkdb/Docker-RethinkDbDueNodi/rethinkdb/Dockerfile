@@ -6,3 +6,4 @@ RUN chmod 777 /data/start-rethinkdb-cluster.sh
 RUN ls -al /data
 
 CMD ["bash", "-c", "/data/start-rethinkdb-cluster.sh"]
+#CMD ["bash", "-c", "ls -al /data"]
