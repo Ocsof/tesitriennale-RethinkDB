@@ -55,7 +55,7 @@ namespace prova
 
             /*******   Scegliere in base al numero di nodi in esecuzione sul Cluster  *************/
 
-            IRXTest rxTest = new RXClusterTest(rethinkDbStore, rethinkDbConnection);
+            IRXTest rxTest = new RXTest(rethinkDbStore, rethinkDbConnection);
             //IRXTest rxTest = new RXSingleNodeTests(rethinkDbStore, rethinkDbConnection);
 
             /************************ da provare *************************/

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace prova.ReactiveExtension
 {
-    class RXClusterTest : IRXTest
+    class RXTest : IRXTest
     {
         private static IConnectionNodes _connectionFactory;
         private string dbName;
@@ -23,7 +23,7 @@ namespace prova.ReactiveExtension
         private IDbStore rethinkDbStore;
         private static RethinkDB R = RethinkDB.R;
 
-        public RXClusterTest(IDbStore rethinkDbStore, IConnectionNodes _connectionF) //IConnectionPooling
+        public RXTest(IDbStore rethinkDbStore, IConnectionNodes _connectionF) //IConnectionPooling
         {
             this.rethinkDbStore = rethinkDbStore;
             _connectionFactory = _connectionF;
