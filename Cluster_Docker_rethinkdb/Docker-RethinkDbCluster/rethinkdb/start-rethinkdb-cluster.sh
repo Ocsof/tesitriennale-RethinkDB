@@ -6,7 +6,7 @@ for dbHost in ${dbHostsArray[*]}
 do
     hostExists=`getent hosts $dbHost`
 
-    if [ ! -z "$hostExists"]
+    if [ ! -z "$hostExists" ]
     then
         joinString="$joinString --join $dbHost"
     fi

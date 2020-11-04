@@ -17,13 +17,13 @@ namespace prova.ReactiveExtension
 {
     class RXClusterTest : IRXTest
     {
-        private static IConnectionPooling _connectionFactory;
+        private static IConnectionNodes _connectionFactory;
         private string dbName;
         private Stopwatch stopWatch;
         private IDbStore rethinkDbStore;
         private static RethinkDB R = RethinkDB.R;
 
-        public RXClusterTest(IDbStore rethinkDbStore, IConnectionPooling _connectionF) //IConnectionPooling
+        public RXClusterTest(IDbStore rethinkDbStore, IConnectionNodes _connectionF) //IConnectionPooling
         {
             this.rethinkDbStore = rethinkDbStore;
             _connectionFactory = _connectionF;
@@ -38,7 +38,7 @@ namespace prova.ReactiveExtension
             var onError = 0;
             var onNext = 0;
 
-            var conn = _connectionFactory.CreateConnection();
+            var conn = _connectionFactory.GetConnection();
 
             var changes = R.Db(dbName).Table(nameof(Author))
                 //.changes()[new {include_states = true, include_initial = true}]

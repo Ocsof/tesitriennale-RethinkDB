@@ -23,36 +23,33 @@ namespace prova
         {
            
 
-            IList<DbOptions> listNodiCluster = new List<DbOptions>() { new DbOptions {Database = "test", HostPort = "192.168.7.154:28016", Timeout = 60 } ,
-                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.154:28017", Timeout = 60 } ,
-                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.154:28018", Timeout = 60 } ,
-                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.154:28019", Timeout = 60 } ,
-                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.154:28020", Timeout = 60 }
+            IList<DbOptions> listNodiCluster = new List<DbOptions>() { new DbOptions {Database = "test", HostPort = "192.168.7.47:28016", Timeout = 60 } ,
+                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.47:28017", Timeout = 60 } ,
+                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.47:28018", Timeout = 60 } ,
+                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.47:28019", Timeout = 60 } ,
+                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.47:28020", Timeout = 60 }
             };
 
-            IList<DbOptions> listTwoNodi = new List<DbOptions>() { new DbOptions {Database = "test", HostPort = "192.168.7.154:28016", Timeout = 60 } ,
-                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.154:28017", Timeout = 60 } 
+            IList<DbOptions> listTwoNodi = new List<DbOptions>() { new DbOptions {Database = "test", HostPort = "192.168.7.47:28016", Timeout = 60 } ,
+                                                                              new DbOptions {Database = "test", HostPort = "192.168.7.47:28017", Timeout = 60 } 
             };
 
-            IList<DbOptions> listOneNodo = new List<DbOptions>() { new DbOptions { Database = "test", Host = "192.168.7.154", Port = 28016, Timeout = 60 } };
+            IList<DbOptions> listOneNodo = new List<DbOptions>() { new DbOptions { Database = "test", HostPort = "192.168.7.47:28016", Timeout = 60 } };
 
 
 
             //Test Connettività 
             HttpClient client = new HttpClient();
-            var resp = await client.GetAsync("http://192.168.7.154:8081");
+            var resp = await client.GetAsync("http://192.168.7.47:8081");
             Console.WriteLine(resp.StatusCode);
 
             /*******   Scegliere in base al numero di nodi in esecuzione sul Cluster  *************/
+            //IConnectionNodes rethinkDbConnection = new ConnectionNodes(listNodiCluster);
+            IConnectionNodes rethinkDbConnection = new ConnectionNodes(listTwoNodi);
+            //IConnectionNodes rethinkDbConnection = new ConnectionNodes(listOneNodo);
 
-            IConnectionPooling rethinkDbConnection = new ConnectionCluster(listNodiCluster);
-            //IConnectionPooling rethinkDbConnection = new ConnectionTwoNode(listTwoNodi);
-            //ISingleConnection rethinkDbConnection = new SingleConnection(listOneNodo);
 
-            /*******   Scegliere in base al numero di nodi in esecuzione sul Cluster  *************/
-
-            IDbStore rethinkDbStore = new DbClusterStore(rethinkDbConnection);  //anche per il caso da 2 nodi
-            //IDbStore rethinkDbStore = new DbSingleNodeStore(rethinkDbConnection);
+            IDbStore rethinkDbStore = new DbStore(rethinkDbConnection); 
 
             rethinkDbStore.InitializeDatabase();
 
