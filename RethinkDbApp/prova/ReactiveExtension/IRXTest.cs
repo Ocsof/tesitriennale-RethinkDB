@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace prova.ReactiveExtension
+namespace Rethink.ReactiveExtension
 {
     interface IRXTest
     {

@@ -1,9 +1,9 @@
-﻿using prova.Model;
+﻿using Rethink.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace prova.Test
+namespace Rethink.Test
 {
     class TestQuery : ITestQuery
     {

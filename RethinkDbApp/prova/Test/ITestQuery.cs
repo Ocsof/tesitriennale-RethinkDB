@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace prova.Test
+namespace Rethink.Test
 {
     interface ITestQuery
     {

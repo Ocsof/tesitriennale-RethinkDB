@@ -1,7 +1,7 @@
-﻿using prova.Connection;
-using prova.Model;
-using prova.ReactiveExtension;
-using prova.Test;
+﻿ using Rethink.Connection;
+using Rethink.Model;
+using Rethink.ReactiveExtension;
+using Rethink.Test;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Model;
@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace prova
+namespace Rethink
 {
     class Start
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using prova.Model;
+using Rethink.Model;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using RethinkDb.Driver.Net.Clustering;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace prova.Connection
+namespace Rethink.Connection
 {
     class ConnectionNodes : IConnectionNodes
     {

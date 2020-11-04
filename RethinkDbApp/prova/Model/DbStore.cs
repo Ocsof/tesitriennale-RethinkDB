@@ -1,4 +1,4 @@
-﻿using prova.Connection;
+﻿using Rethink.Connection;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
-namespace prova.Model
+namespace Rethink.Model
 {
     class DbStore : IDbStore
     {

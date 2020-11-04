@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
-using prova.Connection;
-using prova.Model;
+using Rethink.Connection;
+using Rethink.Model;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Model;
 using System;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace prova.ReactiveExtension
+namespace Rethink.ReactiveExtension
 {
     class RXTest : IRXTest
     {
