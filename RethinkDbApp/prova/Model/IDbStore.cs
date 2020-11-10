@@ -4,17 +4,12 @@ using System.Text;
 
 namespace Rethink.Model
 {
-    interface IDbStore
+    public interface IDbStore
     {
 
-        /// <summary>
-        /// Crea Db sul server
-        /// </summary>
-        /// <param name="dbName"> Nome del db da creare</param>
-        public void CreateDb(string dbName);
 
         /// <summary>
-        /// Crea tabelle su un db
+        /// Crea la tabella sul db precedentemente specificato.
         /// </summary>
         /// <param name="tableName">Nome tabella da creare sul db</param>
         public void CreateTable(string tableName);

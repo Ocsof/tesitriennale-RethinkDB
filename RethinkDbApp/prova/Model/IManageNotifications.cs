@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rethink.Model
 {
-    interface IManageNotifications
+    public interface IManageNotifications
     {
         /// <summary>
         /// Ritorno l'id più alto delle notifiche presenti sul db

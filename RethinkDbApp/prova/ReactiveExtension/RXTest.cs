@@ -29,7 +29,7 @@ namespace Rethink.ReactiveExtension
             this.dbName = this.rethinkDbConnection.GetNodi().ElementAt(0).Database;
         }
 
-        public void basic_change_feed_with_reactive_extensions()
+        public void basic_change_feed_with_reactive_extensions<T>() where T : Notification
         {
             var onCompleted = 0;
             var onError = 0;
@@ -41,7 +41,7 @@ namespace Rethink.ReactiveExtension
             var changes = R.Db(dbName).Table(nameof(Notification))
                 //.changes()[new {include_states = true, include_initial = true}]
                 .Changes()//[new { include_states = true }]
-                .RunChanges<Notification>(conn);
+                .RunChanges<T>(conn); //Notification
 
             //changes.IsFeed.Should().BeTrue();
 
@@ -71,11 +71,12 @@ namespace Rethink.ReactiveExtension
             onError++;
         }
 
-        private void OnNext(Change<Notification> obj, ref int onNext)
+        private void OnNext<T>(Change<T> obj, ref int onNext) where T : Notification
         {
             Console.WriteLine("On Next");
             //Author? oldValue = obj.OldValue;
-            Notification? oldValue = obj.OldValue;
+            //T? oldValue = obj.OldValue;
+            var oldValue = obj.OldValue;
          
             //obj.Dump();
             onNext++;

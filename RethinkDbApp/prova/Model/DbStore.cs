@@ -67,60 +67,7 @@ namespace Rethink.Model
             }
         }
 
-       
-
-      
-
-        public void MultiInsertNotifications()
-        {
-            var conn = rethinkDbConnection.GetConnection();
-            int author_id = 0;
-
-            var id = R.Db(this.dbName).Table(nameof(Notification)).Count().Run(conn) + 1; //id ultimo elem + 1
-
-            for (var i = 0; i < 50; i++)
-            {
-                Notification notification = new Notification
-                {
-                    Id = id,
-                    Text = this.createRandomString()
-                };
-                this.InsertOrUpdateNotification(notification.Id, notification.Text);
-                id++;
-                author_id++;
-            }
-        }
-
-        public void MultiDeleteNotifications()
-        {         
-            var conn = rethinkDbConnection.GetConnection();
-            var id = R.Db(this.dbName).Table(nameof(Notification)).Count().Run(conn);  //id dell'ultimo elemento
-          
-            for (var i = 0; i < 50; i++)
-            {
-                
-                var result = R.Db(this.dbName).Table(nameof(Notification))
-                .Get(id).Delete().Run(conn);
-                id--;
-            }
-        }
-
-
-        /***Generatore di stringhe usato dalla MultiInsert ***/
-
-        private String createRandomString()
-        {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[8];
-            var random = new Random();
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new String(stringChars); 
-        }
+  
 
     }
 }

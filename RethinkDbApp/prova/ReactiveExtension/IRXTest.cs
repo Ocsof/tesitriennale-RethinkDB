@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rethink.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,6 @@ namespace Rethink.ReactiveExtension
         /// <summary>
         /// Test per le notifiche
         /// </summary>
-        public void basic_change_feed_with_reactive_extensions();
+        public void basic_change_feed_with_reactive_extensions<T>() where T : Notification;
     }
 }
