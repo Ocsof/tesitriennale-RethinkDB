@@ -6,10 +6,6 @@ namespace Rethink.Model
 {
     interface IDbStore
     {
-        /// <summary>
-        /// Inizializzazione db: crea db, tabelle e indici se non già presenti sul server
-        /// </summary>
-        public void InitializeDatabase();
 
         /// <summary>
         /// Crea Db sul server
@@ -18,12 +14,11 @@ namespace Rethink.Model
         public void CreateDb(string dbName);
 
         /// <summary>
-        /// Crea tabella su un db
+        /// Crea tabelle su un db
         /// </summary>
-        /// <param name="dbName">Nome db su cui creare tabella</param>
-        /// <param name="tableName">Nome tabella da creare</param>
+        /// <param name="tableName">Nome tabella da creare sul db</param>
+        public void CreateTable(string tableName);
 
-        public void CreateTable(string dbName, string tableName);
 
         /// <summary>
         /// Crea Indice su un campo di una tabella di un db
@@ -31,36 +26,17 @@ namespace Rethink.Model
         /// <param name="dbName">Nome db</param>
         /// <param name="tableName">Nome tabella</param>
         /// <param name="indexName">Nome Indice da creare</param>
-        public void CreateIndex(string dbName, string tableName, string indexName);
+        public void CreateIndex(string tableName, string indexName);
 
         /// <summary>
-        /// Inserisci nuovo author nel db
+        /// Riconfigura il numero di shard e di repliche per ogni tabella sul db
         /// </summary>
-        /// <param name="author">Author da inserire</param>
-        public void InsertOrUpdateAuthor(Author author);
+        /// <param name="shards"></param>
+        /// <param name="replicas"></param>
+        public void Reconfigure(int shards, int replicas);
 
-        /// <summary>
-        /// Inserisci nuovo post nel db
-        /// </summary>
-        /// <param name="post">Post da inserire</param>
-        public void InsertOrUpdatePost(Post post);
         
-        /// <summary>
-        /// Query che ritorna per ogn autore il numero di post che ha scritto
-        /// </summary>
-        /// <returns></returns>
-        public List<AuthorStatus> GetAuthorsStatus();
-
-        /// <summary>
-        /// 50 inserimenti su tabella Post
-        /// </summary>
-        public void MultiInsertPosts();
-
-        /// <summary>
-        /// 50 cancellazioni su Post
-        /// </summary>
-        public void MultiDeletePosts();
-
+        
 
     }
 }

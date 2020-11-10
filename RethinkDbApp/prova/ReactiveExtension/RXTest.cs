@@ -17,19 +17,16 @@ namespace Rethink.ReactiveExtension
 {
     class RXTest : IRXTest
     {
-        private static IConnectionNodes _connectionFactory;
-        private string dbName;
-        private Stopwatch stopWatch;
-        private IDbStore rethinkDbStore;
-        private static RethinkDB R = RethinkDB.R;
+        private readonly IConnectionNodes rethinkDbConnection;
+        private readonly string dbName;
+        private readonly IDbStore rethinkDbStore;
+        private readonly static RethinkDB R = RethinkDB.R;
 
-        public RXTest(IDbStore rethinkDbStore, IConnectionNodes _connectionF) //IConnectionPooling
+        public RXTest(IDbStore rethinkDbStore, IConnectionNodes rethinkDbConnection) //IConnectionPooling
         {
             this.rethinkDbStore = rethinkDbStore;
-            _connectionFactory = _connectionF;
-            this.dbName = _connectionFactory.GetNodi().ElementAt(0).Database;
-            this.stopWatch = new Stopwatch();
-
+            this.rethinkDbConnection = rethinkDbConnection;
+            this.dbName = this.rethinkDbConnection.GetNodi().ElementAt(0).Database;
         }
 
         public void basic_change_feed_with_reactive_extensions()
@@ -37,13 +34,14 @@ namespace Rethink.ReactiveExtension
             var onCompleted = 0;
             var onError = 0;
             var onNext = 0;
+            
 
-            var conn = _connectionFactory.GetConnection();
+            var conn = this.rethinkDbConnection.GetConnection();
 
-            var changes = R.Db(dbName).Table(nameof(Author))
+            var changes = R.Db(dbName).Table(nameof(Notification))
                 //.changes()[new {include_states = true, include_initial = true}]
                 .Changes()//[new { include_states = true }]
-                .RunChanges<Author>(conn);
+                .RunChanges<Notification>(conn);
 
             //changes.IsFeed.Should().BeTrue();
 
@@ -57,67 +55,8 @@ namespace Rethink.ReactiveExtension
                     e => OnError(e, ref onError),
                     () => OnCompleted(ref onCompleted)
                 );
-
-
-            //Next simulate 3 inserts into Author table.
-            Thread.Sleep(3000);
-
-            
-            Task.Run(() =>
-            {
-                rethinkDbStore.InsertOrUpdateAuthor(new Author
-                {
-                    id = 101,
-                    name = "Gogeta",
-                    hobby = "Pallamano",
-                    age = 22
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-            
-
-            Task.Run(() =>
-            {
-                rethinkDbStore.InsertOrUpdateAuthor(new Author
-                {
-                    id = 105,
-                    name = "Alpi",
-                    hobby = "Pallavolo",
-                    age = 22
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-
-            
-            Task.Run(() =>
-            {
-                rethinkDbStore.InsertOrUpdateAuthor(new Author
-                {
-                    id = 101,
-                    name = "Gogeta",
-                    hobby = "Pallaman",
-                    age = 22
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-
-            changes.Close();
-
-            Thread.Sleep(3000);
-
-            /*
-            onCompleted.Should().Be(1);
-            onNext.Should().Be(3);
-            onError.Should().Be(0);
-            */
-            Console.WriteLine($"Next: {onNext} Completed: {onCompleted}");
         }
+
 
         private void OnCompleted(ref int onCompleted)
         {
@@ -132,11 +71,11 @@ namespace Rethink.ReactiveExtension
             onError++;
         }
 
-        private void OnNext(Change<Author> obj, ref int onNext)
+        private void OnNext(Change<Notification> obj, ref int onNext)
         {
             Console.WriteLine("On Next");
             //Author? oldValue = obj.OldValue;
-            Author? oldValue = obj.OldValue;
+            Notification? oldValue = obj.OldValue;
          
             //obj.Dump();
             onNext++;

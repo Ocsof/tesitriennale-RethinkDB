@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Rethink.Model;
+﻿using Rethink.Model;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using RethinkDb.Driver.Net.Clustering;
@@ -14,8 +13,8 @@ namespace Rethink.Connection
     class ConnectionNodes : IConnectionNodes
     {
         //private RethinkDB R = RethinkDB.R;
-        private ConnectionPool conn;
-        private IList<DbOptions> listNodi;
+        private ConnectionPool conn;  //IConnection
+        private readonly IList<DbOptions> listNodi;
 
 
         public ConnectionNodes(IList<DbOptions> listNodi)

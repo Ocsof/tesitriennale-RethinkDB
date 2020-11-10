@@ -62,21 +62,21 @@ namespace Rethink
 
             //Test query join Author e Posts
             ITestQuery testQuery = new TestQuery(rethinkDbStore);
-            testQuery.PrintAuthorStatus();
-        
+            //testQuery.PrintAuthorStatus();
+
 
             /******* Multi Insert e Multi Delete ******/
-            
-          
-           rethinkDbStore.MultiInsertPosts();
-
-           rethinkDbStore.MultiDeletePosts();
-          
 
 
+            //rethinkDbStore.MultiInsertPosts();
+
+            //rethinkDbStore.MultiDeletePosts();
+
+
+            rethinkDbStore.GetPostByAuthor(1);
 
             /******** prova reactiveExtension *************/
-            rxTest.basic_change_feed_with_reactive_extensions();
+            //rxTest.basic_change_feed_with_reactive_extensions();
 
 
             Console.ReadLine();
