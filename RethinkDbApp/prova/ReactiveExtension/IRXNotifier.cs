@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Rethink.ReactiveExtension
 {
-    interface IRXTest
+    public interface IRXNotifier
     {
         /// <summary>
         /// Test per le notifiche
         /// </summary>
-        public void basic_change_feed_with_reactive_extensions<T>() where T : Notification;
+        public void ListenNotifications<T>() where T : Notification;
     }
 }

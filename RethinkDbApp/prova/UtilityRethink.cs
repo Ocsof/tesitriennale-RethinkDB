@@ -12,12 +12,11 @@ namespace Rethink
 {
     public class UtilityRethink : IUtilityRethink
     {
-        private readonly IList<DbOptions> listNodi;
         private readonly static RethinkDB R = RethinkDB.R;
-        private readonly IConnectionNodes rethinkDbConnection;
-        private readonly IDbStore rethinkDbStore;
-        private readonly IManageNotifications manageNotifications;
-        private readonly IRXTest rxTest;
+        private readonly IConnectionNodes connection;
+        private readonly IDbManager dbStore;
+        private readonly INotificationsManager manageNotifications;
+        private readonly IRXNotifier rxNotifier;
 
 
         /// <summary>
@@ -27,22 +26,22 @@ namespace Rethink
         /// <param name="hostsPorts">Lista di stringhe del tipo: "indirizzoip:porta"</param>
         public UtilityRethink(string dbName, IList<String> hostsPorts)
         {
-            
-            
+
+            IList<DbOptions> listNodi = new List<DbOptions>();
             foreach (String hostPort in hostsPorts)
             {
-                this.listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 60 });
+                listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 60 });
             }
-            this.rethinkDbConnection = new ConnectionNodes(listNodi);
-            this.rethinkDbStore = new DbStore(rethinkDbConnection);
-            this.manageNotifications = new ManageNotifications(rethinkDbConnection);
-            this.rxTest = new RXTest(rethinkDbStore, rethinkDbConnection);
+            this.connection = new ConnectionNodes(listNodi);
+            this.dbStore = new DbManager(this.connection);
+            this.manageNotifications = new NotificationsManager(this.connection);
+            this.rxNotifier = new RXNotifier(this.dbStore, this.connection);
             this.CreateDb(dbName);
         }
 
         private void CreateDb(string dbName)
         {
-            var conn = rethinkDbConnection.GetConnection();
+            var conn = this.connection.GetConnection();
             var exists = R.DbList().Contains(db => db == dbName).Run(conn);
             if (!exists)
             {
@@ -51,24 +50,24 @@ namespace Rethink
             }
         }
 
-        public IDbStore ManageDb()
+        public IDbManager GetDbManager()
         {
-            return this.rethinkDbStore;
+            return this.dbStore;
         }
 
-        public IManageNotifications ManageNotifications()
+        public INotificationsManager GetNotificationsManager()
         {
-            return this.ManageNotifications();
+            return this.manageNotifications;
         }
 
-        public void RegisterToNotifications()
-        {        
-            this.rxTest.basic_change_feed_with_reactive_extensions();
+        public IRXNotifier GetNotifier()
+        {
+            return this.rxNotifier;
         }
    
         public void CloseConnection()
         {
-            rethinkDbConnection.CloseConnection();
+            this.connection.CloseConnection();
         }
 
     }

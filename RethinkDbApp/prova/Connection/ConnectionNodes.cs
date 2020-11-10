@@ -36,7 +36,6 @@ namespace Rethink.Connection
                     nodi[position] = node.HostPort;
                     position++;
                 }
-                Console.WriteLine(nodi.ToString());
                 this.conn = R.ConnectionPool()
                         /* .Seed(new[] { this.listNodi.ElementAt(0).HostPort, this.listNodi.ElementAt(1).HostPort, listNodi.ElementAt(2).HostPort, listNodi.ElementAt(3).HostPort, listNodi.ElementAt(4).HostPort 
                                     })

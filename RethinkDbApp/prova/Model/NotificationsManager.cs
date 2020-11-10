@@ -4,35 +4,39 @@ using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using Random = System.Random;
 
 namespace Rethink.Model
 {
-    class ManageNotifications: IManageNotifications
+    class NotificationsManager: INotificationsManager
     {
-        private readonly IConnectionNodes rethinkDbConnection;
+        private readonly IConnectionNodes connection;
         private readonly static RethinkDB R = RethinkDB.R;
         private readonly string dbName;
+        private readonly string tableName;
 
-        public ManageNotifications(IConnectionNodes rethinkDbConnection)  //IConnectionPooling connectionFactory  // ---> per connessione con un cluster + nodi
+        public NotificationsManager(IConnectionNodes connection)  //IConnectionPooling connectionFactory  // ---> per connessione con un cluster + nodi
         {
-            this.rethinkDbConnection = rethinkDbConnection;
-            this.dbName = rethinkDbConnection.GetNodi().ElementAt(0).Database;
+            this.connection = connection;
+            this.dbName = connection.GetNodi().ElementAt(0).Database;
+            this.tableName = "Notifications";
         }
 
         public int GetIdLastNotification()
         {
-            var conn = this.rethinkDbConnection.GetConnection();
-            var id = R.Db(this.dbName).Table(nameof(Notification)).Count().Run(conn);
+            var conn = this.connection.GetConnection();
+            var id = (int)R.Db(this.dbName).Table(this.tableName).Count().Run(conn);
 
             return id;
         }
 
         public int GetIdLastNotificationExecution()
         {
-            var conn = this.rethinkDbConnection.GetConnection();
-            var id = R.Db(this.dbName).Table(nameof(Notification)).Filter(
+            var conn = this.connection.GetConnection();
+            var id = (int)R.Db(this.dbName).Table(this.tableName).Filter(
                                         notification => notification.G("Type").Eq(1) //tipo=1 è una NotificationExec
                                       ).Count().Run(conn);
 
@@ -46,9 +50,9 @@ namespace Rethink.Model
 
         public void NewNotification<T>(T notification) where T : Notification
         {
-            var conn = this.rethinkDbConnection.GetConnection();
+            var conn = this.connection.GetConnection();
 
-            Cursor<T> all = R.Db(this.dbName).Table(nameof(Notification))
+            Cursor<T> all = R.Db(this.dbName).Table(this.tableName)
                 .GetAll(notification.Id)//[new { index = nameof(Post.title) }]
                 .Run<T>(conn);
 
@@ -56,22 +60,32 @@ namespace Rethink.Model
             if (notifications.Count > 0)
             {
                 // update
-                R.Db(this.dbName).Table(nameof(Notification)).Get(notifications.First().Id).Update(notification).RunWrite(conn);
+                R.Db(this.dbName).Table(this.tableName).Get(notifications.First().Id).Update(notification).RunWrite(conn);
             }
             else
             {
                 // insert
-                var result = R.Db(this.dbName).Table(nameof(Notification))
+                var result = R.Db(this.dbName).Table(this.tableName)
                     .Insert(notification)
                     .RunWrite(conn);
             }
         }
 
+        public void DeleteNotification(int id)
+        {
+            var conn = this.connection.GetConnection();
+            R.Db(this.dbName).Table(this.tableName).Get(id).Delete().Run(conn);
+        }
+
+       
+
+        
+
         public T GetNotification<T>(int id) where T : Notification
         {
-            var conn = this.rethinkDbConnection.GetConnection();
+            var conn = this.connection.GetConnection();
 
-            T notification = R.Db(this.dbName).Table(nameof(Notification))
+            T notification = R.Db(this.dbName).Table(this.tableName)
                             .GetAll(id)
                             .Run<T>(conn);
 
@@ -80,9 +94,9 @@ namespace Rethink.Model
 
         public IList<T> GetNotifications<T>(Date date) where T : Notification
         {
-            var conn = this.rethinkDbConnection.GetConnection();
+            var conn = this.connection.GetConnection();
 
-            Cursor<T> notifications = R.Db(this.dbName).Table(nameof(Notification)).Filter(
+            Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
                                         notification => notification.G("Date").Date().Eq(R.Now().Date())
                                       ).Run(conn);
 
@@ -95,9 +109,9 @@ namespace Rethink.Model
 
         public IList<T> GetNotifications<T>(string text) where T : Notification
         {
-            var conn = this.rethinkDbConnection.GetConnection();
+            var conn = this.connection.GetConnection();
 
-            Cursor<T> notifications = R.Db(this.dbName).Table(nameof(Notification)).Filter(
+            Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
                                         notification => notification.G("Text").Eq(text)
                                       ).Run(conn);
 
@@ -108,5 +122,7 @@ namespace Rethink.Model
 
             return notifications.ToList();
         }
+
+        
     }
 }

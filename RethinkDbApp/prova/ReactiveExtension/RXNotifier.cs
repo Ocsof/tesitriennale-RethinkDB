@@ -15,21 +15,21 @@ using System.Threading.Tasks;
 
 namespace Rethink.ReactiveExtension
 {
-    class RXTest : IRXTest
+    class RXNotifier : IRXNotifier
     {
         private readonly IConnectionNodes rethinkDbConnection;
         private readonly string dbName;
-        private readonly IDbStore rethinkDbStore;
+        private readonly IDbManager rethinkDbStore;
         private readonly static RethinkDB R = RethinkDB.R;
 
-        public RXTest(IDbStore rethinkDbStore, IConnectionNodes rethinkDbConnection) //IConnectionPooling
+        public RXNotifier(IDbManager rethinkDbStore, IConnectionNodes rethinkDbConnection) //IConnectionPooling
         {
             this.rethinkDbStore = rethinkDbStore;
             this.rethinkDbConnection = rethinkDbConnection;
             this.dbName = this.rethinkDbConnection.GetNodi().ElementAt(0).Database;
         }
 
-        public void basic_change_feed_with_reactive_extensions<T>() where T : Notification
+        public void ListenNotifications<T>() where T : Notification
         {
             var onCompleted = 0;
             var onError = 0;

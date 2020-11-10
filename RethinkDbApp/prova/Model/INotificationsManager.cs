@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rethink.Model
 {
-    public interface IManageNotifications
+    public interface INotificationsManager
     {
         /// <summary>
         /// Ritorno l'id più alto delle notifiche presenti sul db
@@ -26,6 +26,7 @@ namespace Rethink.Model
         /// <param name="notification">Notifica che verrà inserita sul db</param>
         public void NewNotification<T>(T notification) where T : Notification;
 
+
         /// <summary>
         /// Richiede al db la notifica con l'id passato in input
         /// </summary>
@@ -33,6 +34,12 @@ namespace Rethink.Model
         /// <param name="id">id della notifica da ricercare</param>
         /// <returns>La notifica</returns>
         public T GetNotification<T>(int id) where T : Notification;
+
+        /// <summary>
+        /// Elimina la notifica con l'id passato in input
+        /// </summary>
+        /// <param name="id">id notifica</param>
+        public void DeleteNotification(int id);
 
         /// <summary>
         /// Richiede al db tutte le notifiche avvenute in una certa data

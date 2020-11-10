@@ -14,7 +14,7 @@ namespace Rethink.Model
         /// <summary>
         /// Data generazione notifica
         /// </summary>
-        public Date Date { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Descrizione della notifica
@@ -24,7 +24,7 @@ namespace Rethink.Model
         /// <summary>
         /// Tipo di notifica, 1 se è di esecuzione, 2 se è di NewDate
         /// </summary>
-        public int Tipo { get; set; }
+        public int Type { get; set; }
 
         public override String ToString()
         {
