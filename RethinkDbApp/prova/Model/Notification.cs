@@ -10,7 +10,7 @@ namespace Rethink.Model
     {
         protected Notification()
         {
-            Type = GetType();
+            
         }
 
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]  //penso sia qualcosa relativo al fatto che id no null
@@ -29,7 +29,7 @@ namespace Rethink.Model
         /// <summary>
         /// Tipo di notifica, 1 se è di esecuzione, 2 se è di NewDate
         /// </summary>
-        public Type Type { get; set; }
+        public string Type { get; set; }
 
         public override String ToString()
         {

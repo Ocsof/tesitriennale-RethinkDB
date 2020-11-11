@@ -64,6 +64,7 @@ namespace Rethink.Model
             }
             else
             {
+                notification.Type = typeof(T).Name;
                 // insert
                 var result = R.Db(this.dbName).Table(this.tableName)
                     .Insert(notification)
@@ -82,8 +83,9 @@ namespace Rethink.Model
         public T GetNotification<T>(int id) where T : Notification
         {
             var conn = this.connection.GetConnection();
-
+            
             var notification = R.Db(this.dbName).Table(this.tableName)
+                              .Filter(notification => notification.G("Type").Eq(typeof(T).Name) )
                               .Get(id)
                               .Run<T>(conn);
 
