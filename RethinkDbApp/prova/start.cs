@@ -13,7 +13,7 @@ namespace Rethink
     {
 
         //static void Main(string[] args)
-        async Task Main(string[] args)
+        static async Task Main(string[] args)
         {
            
             /*
@@ -34,11 +34,19 @@ namespace Rethink
             IList<string> hostPortsNodiCluster = new List<String>() { "192.168.7.47:28016", "192.168.7.47:28017", "192.168.7.47:28018", "192.168.7.47:28019", "192.168.7.47:28020" };
             IList<string> hostPortsTwoNodi = new List<String>() { "192.168.7.47:28016", "192.168.7.47:28017" };
             IList<string> hostPortsOneNode = new List<String>() { "192.168.7.47:28016" };
-            IUtilityRethink utilityRethink = new UtilityRethink("test", hostPortsTwoNodi);
+            IUtilityRethink utilityRethink = new UtilityRethink("test", hostPortsNodiCluster);
+
             var dbManager = utilityRethink.GetDbManager();
             var notificationsManager = utilityRethink.GetNotificationsManager();
+            var notificators = utilityRethink.GetNotificationsManager();
 
-            /****** test DbStore   **********/
+            /********** Test Connettività **********/
+            HttpClient client = new HttpClient();
+            var resp = await client.GetAsync("http://192.168.7.47:8081");
+            Console.WriteLine(resp.StatusCode);
+
+            /******************************************************************************************************************************
+            *********************************************Test DbManager   ******************************************************************/
             dbManager.CreateTable("Notifications");
             Console.WriteLine(dbManager.GetTablesList());
             //store.DelateTable("Notifications"); 
@@ -46,22 +54,64 @@ namespace Rethink
             Console.WriteLine(dbManager.GetIndexList("Notifications"));
             dbManager.DeleteIndex("Notifications", "Date");
             Console.Write(dbManager.GetIndexList("Notifications"));
+            //dbManager.Reconfigure(2, 3);
+            Console.WriteLine();
 
+            /***********************************************************************************************************************************
+            ******************************************* Test NotificationsManager **********************************************************
+            **********************************************************************************************************************************/
+            MultiInsertNotifications(notificationsManager);
+            MultiDeleteNotifications(notificationsManager);
 
-            //Test Connettività 
-            HttpClient client = new HttpClient();
-            var resp = await client.GetAsync("http://192.168.7.47:8081");
-            Console.WriteLine(resp.StatusCode);
+           
+            /*************Creazione e inserimento nel db di una notifica di New Date e una di Execution **********************************/
+            int id = notificationsManager.GetIdLastNotification();
+            id++;
+            NotificationNewDate notificationNewDate = new NotificationNewDate
+            {
+                Id = id,
+                Date = DateTime.Now,
+                Text = CreateRandomString(),
+                Table = CreateRandomString()
+            };
+            Console.WriteLine(notificationNewDate.Type.ToString());
 
+            id = notificationsManager.GetIdLastNotification();
+            int idExec = notificationsManager.GetIdLastNotificationExecution();
+            id++;
+            idExec++;
+            NotificationExec notificationExecution = new NotificationExec
+            {
+                Id = id,
+                Date = DateTime.Now,//new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                Text = CreateRandomString(),
+                IdExec = idExec
+            };
+            notificationsManager.NewNotification(notificationNewDate);
+            notificationsManager.NewNotification(notificationExecution);
 
-            /******* Multi Insert e Multi Delete ******/
-            this.MultiInsertNotifications(notificationsManager);
-            this.MultiDeleteNotifications(notificationsManager);
+            /************************** Get di notifiche -----> ricerca per Id ************************************************/
+            NotificationNewDate not = notificationsManager.GetNotification<NotificationNewDate>(1);
+            Console.WriteLine(not.ToString());
+            //caso di errore ---> la notifica con id 1 sarebbe di tipo NewDate
+            NotificationExec notE = notificationsManager.GetNotification<NotificationExec>(1);
+            Console.WriteLine(notE.ToString());
+            //caso di errore ---> la notifica con id 2 sarebbe di tipo Execution
+            not = notificationsManager.GetNotification<NotificationNewDate>(1);
+            Console.WriteLine(not.ToString());
 
+            //come 
+            //Console.WriteLine("Text della notifica richiesta: " + notificationsManager.GetNotification<NotificationExec>(5, 2));
+            notificationsManager.DeleteNotification(55); //es di Delete che non worka perchè non esistono ancora notifiche con id = 55
+            MultiDeleteNotifications(notificationsManager);
+
+            MultiInsertNotifications(notificationsManager);
+            //MultiDeleteNotifications(notificationsManager);
+            //notificationsManager.GetNotifications(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day));
 
 
             /******** prova reactiveExtension *************/
-            utilityRethink.GetNotifier();
+            //utilityRethink.GetNotifier();
 
 
             Console.ReadLine();
@@ -71,13 +121,15 @@ namespace Rethink
         }
 
 
-        public void MultiInsertNotifications(INotificationsManager notificationsManager)
+        private static void MultiInsertNotifications(INotificationsManager notificationsManager)
         {
             int typeNotification = 1;
             int id = notificationsManager.GetIdLastNotification();
+            id++;
+            Console.WriteLine("Id last Notification: " + id);
             int idExec = notificationsManager.GetIdLastNotificationExecution();
-            Console.WriteLine(id);
-            Console.WriteLine(idExec);
+            idExec++;
+            Console.WriteLine("Id last Notification Execution: " + idExec);
 
             for (int i = 0; i < 50; i++)
             {
@@ -86,9 +138,8 @@ namespace Rethink
                     NotificationExec notification = new NotificationExec
                     {
                         Id = id,
-                        Date = new DateTime(),
-                        Text = this.createRandomString(),
-                        Type = typeNotification,
+                        Date = DateTime.Now, //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                        Text = CreateRandomString(),
                         IdExec = idExec
                     };
                     notificationsManager.NewNotification(notification);
@@ -100,10 +151,9 @@ namespace Rethink
                     NotificationNewDate notification = new NotificationNewDate
                     {
                         Id = id,
-                        Date = new DateTime(),
-                        Text = this.createRandomString(),
-                        Type = typeNotification,
-                        Table = this.createRandomString()
+                        Date = DateTime.Now, //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                        Text = CreateRandomString(),
+                        Table = CreateRandomString()
                     };
                     notificationsManager.NewNotification(notification);
                     typeNotification--;
@@ -112,15 +162,17 @@ namespace Rethink
             }
         }
 
-        public void MultiDeleteNotifications(INotificationsManager notificationsManager)
+        private static void MultiDeleteNotifications(INotificationsManager notificationsManager)
         {
-            for(int id = 0; id < 50; id++)
+            int id = notificationsManager.GetIdLastNotification();
+            int end = id - 50;
+            for (int i = id; i > end; i--)
             {
-                notificationsManager.DeleteNotification(id);
+                notificationsManager.DeleteNotification(i);
             }
         }
 
-        private String createRandomString()
+        private static String CreateRandomString()
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[8];

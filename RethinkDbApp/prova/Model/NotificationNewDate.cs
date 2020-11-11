@@ -10,5 +10,12 @@ namespace Rethink.Model
         /// table
         /// </summary>
         public string Table { get; set; }
+
+        public override String ToString()
+        {
+            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + 
+                            " Type: " + this.Type.ToString() + " Table: " + this.Table;
+            return result;
+        }
     }
 }

@@ -77,22 +77,54 @@ namespace Rethink.Model
             R.Db(this.dbName).Table(this.tableName).Get(id).Delete().Run(conn);
         }
 
-       
 
         
-
         public T GetNotification<T>(int id) where T : Notification
         {
             var conn = this.connection.GetConnection();
 
-            T notification = R.Db(this.dbName).Table(this.tableName)
-                            .GetAll(id)
-                            .Run<T>(conn);
+            var notification = R.Db(this.dbName).Table(this.tableName)
+                              .Get(id)
+                              .Run<T>(conn);
 
             return notification;
         }
+        
+        /*
+        public string GetNotification(int id, int type)   
+        {
+            var conn = this.connection.GetConnection();
+            string text = "err";
+            if(type == 1)
+            {
+                var notification = R.Db(this.dbName).Table(this.tableName)
+                              .GetAll(id)
+                              .Run<NotificationExec>(conn);
+                text = notification.Text;
+            }
+            else
+            {
+                try
+                {
+                    var notification = R.Db(this.dbName).Table(this.tableName)
+                              .Get(id)
+                              .Run<NotificationNewDate>(conn);
+                    Console.WriteLine(notification.ToString());
+                    text = notification.Text;
+                }
+                
+                catch(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+                {
+                    throw new Microsoft.CSharp.RuntimeBinder.RuntimeBinderException();
+                    //Console.WriteLine("Non trovata nessuna notifica di tipo" + id.ToString() + " con questo id: " + type.ToString());
+                }
+                
+                
+            }
+            return text;
+        }*/
 
-        public IList<T> GetNotifications<T>(Date date) where T : Notification
+        public IList<T> GetNotifications<T>(DateTime date) where T : Notification
         {
             var conn = this.connection.GetConnection();
 
@@ -106,6 +138,23 @@ namespace Rethink.Model
             */
             return notifications.ToList();
         }
+
+        /*
+        public IList<String> GetNotifications(DateTime date)
+        {
+            var conn = this.connection.GetConnection();
+
+            Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
+                                        notification => notification.G("Date").Date().Eq(R.Now().Date())
+                                      ).Run(conn);
+        
+            
+            //versione con indice date (su campo date)
+            Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(date).OptArg("index", "date").Run(conn); ;
+            
+            return notifications.ToList();
+        }
+        */
 
         public IList<T> GetNotifications<T>(string text) where T : Notification
         {

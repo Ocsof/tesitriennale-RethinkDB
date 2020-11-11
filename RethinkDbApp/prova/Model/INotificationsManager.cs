@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Rethink.Model
 {
+    /// <summary>
+    /// Gestione tabella Notifications ----> select, update, delete
+    /// </summary>
     public interface INotificationsManager
     {
         /// <summary>
@@ -26,6 +29,11 @@ namespace Rethink.Model
         /// <param name="notification">Notifica che verrà inserita sul db</param>
         public void NewNotification<T>(T notification) where T : Notification;
 
+        /// <summary>
+        /// Elimina la notifica con l'id passato in input
+        /// </summary>
+        /// <param name="id">id notifica</param>
+        public void DeleteNotification(int id);
 
         /// <summary>
         /// Richiede al db la notifica con l'id passato in input
@@ -35,11 +43,7 @@ namespace Rethink.Model
         /// <returns>La notifica</returns>
         public T GetNotification<T>(int id) where T : Notification;
 
-        /// <summary>
-        /// Elimina la notifica con l'id passato in input
-        /// </summary>
-        /// <param name="id">id notifica</param>
-        public void DeleteNotification(int id);
+        //public string GetNotification(int id, int type);
 
         /// <summary>
         /// Richiede al db tutte le notifiche avvenute in una certa data
@@ -47,7 +51,9 @@ namespace Rethink.Model
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
         /// <param name="date">data presa in considerazione</param>
         /// <returns>Lista delle notifiche in quella data</returns>
-        public IList<T> GetNotifications<T>(Date date) where T : Notification;
+        public IList<T> GetNotifications<T>(DateTime date) where T : Notification;
+
+        //public IList<String> GetNotifications(DateTime date);
 
         /// <summary>
         /// Richiede al db tutte le notifiche con un certo testo

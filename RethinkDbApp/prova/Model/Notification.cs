@@ -8,6 +8,11 @@ namespace Rethink.Model
 {
     public abstract class Notification
     {
+        protected Notification()
+        {
+            Type = GetType();
+        }
+
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]  //penso sia qualcosa relativo al fatto che id no null
         public int Id { get; set; }
 
@@ -24,11 +29,11 @@ namespace Rethink.Model
         /// <summary>
         /// Tipo di notifica, 1 se è di esecuzione, 2 se è di NewDate
         /// </summary>
-        public int Type { get; set; }
+        public Type Type { get; set; }
 
         public override String ToString()
         {
-            string result = Id.ToString() + "  " + Text;
+            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + " Type: " + this.Type.ToString();
             return result;
         }
     }

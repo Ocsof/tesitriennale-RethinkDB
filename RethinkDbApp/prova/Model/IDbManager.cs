@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Rethink.Model
 {
+    /// <summary>
+    /// Gestione db ---> tabelle, indici, riconfigurazione shards e replication
+    /// </summary>
     public interface IDbManager
     {
         
