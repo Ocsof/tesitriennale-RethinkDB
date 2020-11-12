@@ -25,29 +25,6 @@ namespace Rethink.Model
             this.tableName = "Notifications";
         }
 
-        public int GetIdLastNotification()
-        {
-            var conn = this.connection.GetConnection();
-            var id = (int)R.Db(this.dbName).Table(this.tableName).Count().Run(conn);
-
-            return id;
-        }
-
-        public int GetIdLastNotificationExecution()
-        {
-            var conn = this.connection.GetConnection();
-            var id = (int)R.Db(this.dbName).Table(this.tableName).Filter(
-                                        notification => notification.G("Type").Eq(1) //tipo=1 è una NotificationExec
-                                      ).Count().Run(conn);
-
-            /*
-            //versione con indice id_exec (su campo id_exec)
-            var id = R.Db(this.dbName).Table(nameof(Notification)).GetAll(1).OptArg("index", "id_exec").Count().Run(conn);  
-            */
-
-            return id;
-        }
-
         public void NewNotification<T>(T notification) where T : Notification
         {
             var conn = this.connection.GetConnection();
@@ -64,7 +41,7 @@ namespace Rethink.Model
             }
             else
             {
-                notification.Type = typeof(T).Name;
+                //notification.Type = typeof(T).Name;
                 // insert
                 var result = R.Db(this.dbName).Table(this.tableName)
                     .Insert(notification)
@@ -72,7 +49,7 @@ namespace Rethink.Model
             }
         }
 
-        public void DeleteNotification(int id)
+        public void DeleteNotification(Guid id)
         {
             var conn = this.connection.GetConnection();
             R.Db(this.dbName).Table(this.tableName).Get(id).Delete().Run(conn);
@@ -80,14 +57,20 @@ namespace Rethink.Model
 
 
         
-        public T GetNotification<T>(int id) where T : Notification
+        public T GetNotificationOrNull<T>(Guid id) where T : Notification
         {
             var conn = this.connection.GetConnection();
-            
+
+            /*
             var notification = R.Db(this.dbName).Table(this.tableName)
                               .Filter(notification => notification.G("Type").Eq(typeof(T).Name) )
                               .Get(id)
                               .Run<T>(conn);
+            */
+            var notification = R.Db(this.dbName).Table(this.tableName)
+                              .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Id").Eq(id)))
+                              .Run<T>(conn);
+
 
             return notification;
         }
@@ -126,7 +109,7 @@ namespace Rethink.Model
             return text;
         }*/
 
-        public IList<T> GetNotifications<T>(DateTime date) where T : Notification
+        public IList<T> GetNotificationsOrNull<T>(DateTime date) where T : Notification
         {
             var conn = this.connection.GetConnection();
 
@@ -158,7 +141,7 @@ namespace Rethink.Model
         }
         */
 
-        public IList<T> GetNotifications<T>(string text) where T : Notification
+        public IList<T> GetNotificationsOrNull<T>(string text) where T : Notification
         {
             var conn = this.connection.GetConnection();
 

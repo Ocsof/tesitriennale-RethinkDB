@@ -11,18 +11,6 @@ namespace Rethink.Model
     public interface INotificationsManager
     {
         /// <summary>
-        /// Ritorno l'id più alto delle notifiche presenti sul db
-        /// </summary>
-        /// <returns>Id dell'ultima notifica</returns>
-        public int GetIdLastNotification();
-
-        /// <summary>
-        /// Ritorna l'id più alto delle notifiche di esecuzione presenti sul db
-        /// </summary>
-        /// <returns>Id dell'ultima notifica di esecuzione</returns>
-        public int GetIdLastNotificationExecution();
-
-        /// <summary>
         /// Inserisce sul db "Notification" una nuova notifica
         /// </summary>
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
@@ -33,7 +21,7 @@ namespace Rethink.Model
         /// Elimina la notifica con l'id passato in input
         /// </summary>
         /// <param name="id">id notifica</param>
-        public void DeleteNotification(int id);
+        public void DeleteNotification(Guid id);
 
         /// <summary>
         /// Richiede al db la notifica con l'id passato in input
@@ -41,9 +29,7 @@ namespace Rethink.Model
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
         /// <param name="id">id della notifica da ricercare</param>
         /// <returns>La notifica</returns>
-        public T GetNotification<T>(int id) where T : Notification;
-
-        //public string GetNotification(int id, int type);
+        public T GetNotificationOrNull<T>(Guid id) where T : Notification;
 
         /// <summary>
         /// Richiede al db tutte le notifiche avvenute in una certa data
@@ -51,7 +37,7 @@ namespace Rethink.Model
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
         /// <param name="date">data presa in considerazione</param>
         /// <returns>Lista delle notifiche in quella data</returns>
-        public IList<T> GetNotifications<T>(DateTime date) where T : Notification;
+        public IList<T> GetNotificationsOrNull<T>(DateTime date) where T : Notification;
 
         //public IList<String> GetNotifications(DateTime date);
 
@@ -61,6 +47,6 @@ namespace Rethink.Model
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
         /// <param name="text">Testo preso in considerazione</param>
         /// <returns>Lista di notifiche con quel testo</returns>
-        public IList<T> GetNotifications<T>(String text) where T : Notification;
+        public IList<T> GetNotificationsOrNull<T>(String text) where T : Notification;
     }
 }

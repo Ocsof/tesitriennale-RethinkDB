@@ -11,12 +11,12 @@ namespace Rethink.Model
         /// <summary>
         /// Id di esecuzione
         /// </summary>
-        public int IdExec { get; set; }
+        public Guid IdExec { get; set; }
 
         public override String ToString()
         {
             string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + 
-                            " Type: " + this.Type.ToString() + " IdExec: " + this.IdExec.ToString();
+                            " Type: " + this.Type + " IdExec: " + this.IdExec.ToString();
             return result;
         }
     }

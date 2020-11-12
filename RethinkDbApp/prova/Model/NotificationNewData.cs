@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rethink.Model
 {
-    public class NotificationNewDate: Notification
+    public class NotificationNewData: Notification
     {
         /// <summary>
         /// table
@@ -14,7 +14,7 @@ namespace Rethink.Model
         public override String ToString()
         {
             string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + 
-                            " Type: " + this.Type.ToString() + " Table: " + this.Table;
+                            " Type: " + this.Type + " Table: " + this.Table;
             return result;
         }
     }

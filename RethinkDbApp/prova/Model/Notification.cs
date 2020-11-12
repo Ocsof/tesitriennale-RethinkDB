@@ -10,11 +10,13 @@ namespace Rethink.Model
     {
         protected Notification()
         {
-            
+            this.Type = this.GetType().Name;  //Uso della Reflection --> Assegno a type una stringa che rappresenta il nome della classe
         }
-
+        /// <summary>
+        /// Id della notifica: es 0f8fad5b-d9cb-469f-a165-70867728950e
+        /// </summary>
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]  //penso sia qualcosa relativo al fatto che id no null
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Data generazione notifica
@@ -27,13 +29,13 @@ namespace Rethink.Model
         public string Text { get; set; }
 
         /// <summary>
-        /// Tipo di notifica, 1 se è di esecuzione, 2 se è di NewDate
+        /// Una stringa che rappresenta il tipo della notifica
         /// </summary>
-        public string Type { get; set; }
+        public string Type { get; }
 
         public override String ToString()
         {
-            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + " Type: " + this.Type.ToString();
+            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + " Type: " + this.Type;
             return result;
         }
     }

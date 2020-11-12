@@ -45,8 +45,10 @@ namespace Rethink
             var resp = await client.GetAsync("http://192.168.7.47:8081");
             Console.WriteLine(resp.StatusCode);
 
-            /******************************************************************************************************************************
-            *********************************************Test DbManager   ******************************************************************/
+            /************************************************************************************************************************************
+            *********************************************Test DbManager   ********************************************************************
+            **********************************************************************************************************************************/
+
             dbManager.CreateTable("Notifications");
             Console.WriteLine(dbManager.GetTablesList());
             //store.DelateTable("Notifications"); 
@@ -60,50 +62,66 @@ namespace Rethink
             /***********************************************************************************************************************************
             ******************************************* Test NotificationsManager **********************************************************
             **********************************************************************************************************************************/
-            MultiInsertNotifications(notificationsManager);
-            MultiDeleteNotifications(notificationsManager);
 
-           
+            //********Test di NewNotification(notification), DeleteNotification(id) *******/
+
+            //per eliminare una notifica in particolare
+            
+            Guid id = new Guid("03c0f735-0a30-4101-a116-bf29b4b364e9");
+            Console.WriteLine(id.ToString());
+            notificationsManager.DeleteNotification(id);  //in questo caso non esiste quindi non te lo fa
+            
+            IList<Guid> idList = MultiInsertNotifications(notificationsManager);
+            MultiDeleteNotifications(notificationsManager, idList);
+
             /*************Creazione e inserimento nel db di una notifica di New Date e una di Execution **********************************/
-            int id = notificationsManager.GetIdLastNotification();
-            id++;
-            NotificationNewDate notificationNewDate = new NotificationNewDate
+            Guid idNewData = Guid.NewGuid();
+            Console.Write(id);
+            NotificationNewData notificationNewData = new NotificationNewData
             {
-                Id = id,
+                Id = idNewData,
                 Date = DateTime.Now,
                 Text = CreateRandomString(),
                 Table = CreateRandomString()
             };
-            Console.WriteLine(notificationNewDate.Type.ToString());
 
-            id = notificationsManager.GetIdLastNotification();
-            int idExec = notificationsManager.GetIdLastNotificationExecution();
-            id++;
-            idExec++;
+            Guid idExecution = Guid.NewGuid();
+            Console.Write(id);
+            Guid idExec = Guid.NewGuid();
             NotificationExec notificationExecution = new NotificationExec
             {
-                Id = id,
+                Id = idExecution,
                 Date = DateTime.Now,//new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
                 Text = CreateRandomString(),
                 IdExec = idExec
             };
-            notificationsManager.NewNotification(notificationNewDate);
+            Console.WriteLine(notificationNewData.Type);
+            Console.WriteLine(notificationExecution.Type);
+
+            notificationsManager.NewNotification(notificationNewData);
             notificationsManager.NewNotification(notificationExecution);
+            notificationsManager.DeleteNotification(idNewData);
+            notificationsManager.DeleteNotification(idExecution);
+
+            Console.ReadLine();
 
             /************************** Get di notifiche -----> ricerca per Id ************************************************/
-            NotificationNewDate not = notificationsManager.GetNotification<NotificationNewDate>(1);
-            Console.WriteLine(not.ToString());
+            notificationsManager.NewNotification(notificationNewData);
+            notificationsManager.NewNotification(notificationExecution);
+
+            NotificationNewData not = notificationsManager.GetNotificationOrNull<NotificationNewData>(idNewdate);
+            //Console.WriteLine(not.ToString());
             //caso di errore ---> la notifica con id 1 sarebbe di tipo NewDate
-            NotificationExec notE = notificationsManager.GetNotification<NotificationExec>(1);
-            Console.WriteLine(notE.ToString());
+            //NotificationExec notE = notificationsManager.GetNotificationOrNull<NotificationExec>(1);
+            //Console.WriteLine(notE.ToString());
             //caso di errore ---> la notifica con id 2 sarebbe di tipo Execution
-            not = notificationsManager.GetNotification<NotificationNewDate>(1);
-            Console.WriteLine(not.ToString());
+            //not = notificationsManager.GetNotificationOrNull<NotificationNewData>(1);
+            //Console.WriteLine(not.ToString());
 
             //come 
             //Console.WriteLine("Text della notifica richiesta: " + notificationsManager.GetNotification<NotificationExec>(5, 2));
-            notificationsManager.DeleteNotification(55); //es di Delete che non worka perchè non esistono ancora notifiche con id = 55
-            MultiDeleteNotifications(notificationsManager);
+            //notificationsManager.DeleteNotification(55); //es di Delete che non worka perchè non esistono ancora notifiche con id = 55
+            //MultiDeleteNotifications(notificationsManager);
 
             MultiInsertNotifications(notificationsManager);
             //MultiDeleteNotifications(notificationsManager);
@@ -121,18 +139,17 @@ namespace Rethink
         }
 
 
-        private static void MultiInsertNotifications(INotificationsManager notificationsManager)
+        private static IList<Guid> MultiInsertNotifications(INotificationsManager notificationsManager)
         {
+            IList<Guid> idList = new List<Guid>();
+            Guid id;
+            Guid idExec;
             int typeNotification = 1;
-            int id = notificationsManager.GetIdLastNotification();
-            id++;
-            Console.WriteLine("Id last Notification: " + id);
-            int idExec = notificationsManager.GetIdLastNotificationExecution();
-            idExec++;
-            Console.WriteLine("Id last Notification Execution: " + idExec);
-
             for (int i = 0; i < 50; i++)
             {
+                id = Guid.NewGuid(); 
+                idExec = Guid.NewGuid();
+                idList.Add(id);
                 if (typeNotification == 1)
                 {
                     NotificationExec notification = new NotificationExec
@@ -143,12 +160,11 @@ namespace Rethink
                         IdExec = idExec
                     };
                     notificationsManager.NewNotification(notification);
-                    idExec++;
                     typeNotification++;
                 }
                 else
                 {
-                    NotificationNewDate notification = new NotificationNewDate
+                    NotificationNewData notification = new NotificationNewData
                     {
                         Id = id,
                         Date = DateTime.Now, //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
@@ -158,17 +174,15 @@ namespace Rethink
                     notificationsManager.NewNotification(notification);
                     typeNotification--;
                 }
-                id++;
             }
+            return idList;
         }
 
-        private static void MultiDeleteNotifications(INotificationsManager notificationsManager)
+        private static void MultiDeleteNotifications(INotificationsManager notificationsManager, IList<Guid> idList)
         {
-            int id = notificationsManager.GetIdLastNotification();
-            int end = id - 50;
-            for (int i = id; i > end; i--)
+            foreach(Guid id in idList)
             {
-                notificationsManager.DeleteNotification(i);
+                notificationsManager.DeleteNotification(id);
             }
         }
 
