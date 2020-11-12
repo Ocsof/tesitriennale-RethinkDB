@@ -81,52 +81,19 @@ namespace Rethink.Model
             Cursor<T> notification;
             Console.WriteLine(date);
             Date data = new Date(date);
-            try
-            {
-                /*
-                notification = R.Db(this.dbName).Table(this.tableName)
-                           .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(date)))
-                           .Run<T>(conn);
-                */
-                notification = R.Db(this.dbName).Table(this.tableName)
-                           .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(data)))
-                           .Run<T>(conn);
+                           
+            notification = R.Db(this.dbName).Table(this.tableName)
+                       .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(data)))
+                       .Run<T>(conn);
 
-                IList<T> list = notification.ToList();
-                return list;
-            }
-            catch (System.InvalidOperationException)
-            {
-                return null;
-            }
-
-            /*
-            Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
-                                        notification => notification.G("Date").Date().Eq(R.Now().Date())
-                                      ).Run(conn);
-            */
+            IList<T> list = notification.ToList();
+            return list;
+                       
             /*
             //versione con indice date (su campo date)
             Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(date).OptArg("index", "date").Run(conn); ;
             */
         }
-
-        /*
-        public IList<String> GetNotifications(DateTime date)
-        {
-            var conn = this.connection.GetConnection();
-
-            Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
-                                        notification => notification.G("Date").Date().Eq(R.Now().Date())
-                                      ).Run(conn);
-        
-            
-            //versione con indice date (su campo date)
-            Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(date).OptArg("index", "date").Run(conn); ;
-            
-            return notifications.ToList();
-        }
-        */
 
         public IList<T> GetNotificationsOrNull<T>(string text) where T : Notification
         {
