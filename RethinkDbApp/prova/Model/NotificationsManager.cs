@@ -60,68 +60,55 @@ namespace Rethink.Model
         public T GetNotificationOrNull<T>(Guid id) where T : Notification
         {
             var conn = this.connection.GetConnection();
+            Cursor<T> notification;
+            try
+            {
+                notification = R.Db(this.dbName).Table(this.tableName)
+                           .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("id").Eq(id)))
+                           .Run<T>(conn);
 
-            /*
-            var notification = R.Db(this.dbName).Table(this.tableName)
-                              .Filter(notification => notification.G("Type").Eq(typeof(T).Name) )
-                              .Get(id)
-                              .Run<T>(conn);
-            */
-            var notification = R.Db(this.dbName).Table(this.tableName)
-                              .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Id").Eq(id)))
-                              .Run<T>(conn);
-
-
-            return notification;
+                return notification.First();
+            }
+            catch (System.InvalidOperationException)
+            {
+                return null;
+            }
         }
-        
-        /*
-        public string GetNotification(int id, int type)   
-        {
-            var conn = this.connection.GetConnection();
-            string text = "err";
-            if(type == 1)
-            {
-                var notification = R.Db(this.dbName).Table(this.tableName)
-                              .GetAll(id)
-                              .Run<NotificationExec>(conn);
-                text = notification.Text;
-            }
-            else
-            {
-                try
-                {
-                    var notification = R.Db(this.dbName).Table(this.tableName)
-                              .Get(id)
-                              .Run<NotificationNewDate>(conn);
-                    Console.WriteLine(notification.ToString());
-                    text = notification.Text;
-                }
-                
-                catch(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
-                {
-                    throw new Microsoft.CSharp.RuntimeBinder.RuntimeBinderException();
-                    //Console.WriteLine("Non trovata nessuna notifica di tipo" + id.ToString() + " con questo id: " + type.ToString());
-                }
-                
-                
-            }
-            return text;
-        }*/
 
         public IList<T> GetNotificationsOrNull<T>(DateTime date) where T : Notification
         {
             var conn = this.connection.GetConnection();
+            Cursor<T> notification;
+            Console.WriteLine(date);
+            Date data = new Date(date);
+            try
+            {
+                /*
+                notification = R.Db(this.dbName).Table(this.tableName)
+                           .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(date)))
+                           .Run<T>(conn);
+                */
+                notification = R.Db(this.dbName).Table(this.tableName)
+                           .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(data)))
+                           .Run<T>(conn);
 
+                IList<T> list = notification.ToList();
+                return list;
+            }
+            catch (System.InvalidOperationException)
+            {
+                return null;
+            }
+
+            /*
             Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
                                         notification => notification.G("Date").Date().Eq(R.Now().Date())
                                       ).Run(conn);
-
+            */
             /*
             //versione con indice date (su campo date)
             Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(date).OptArg("index", "date").Run(conn); ;
             */
-            return notifications.ToList();
         }
 
         /*
