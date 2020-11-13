@@ -11,7 +11,7 @@ namespace Rethink.Connection
     interface IConnectionNodes
     {
         /// <summary>
-        /// Crea nuova connessione verso il server
+        /// Crea nuova connessione verso il server, se dopo 20 secondi non si è riuscito a connettere viene segnalato un'errore
         /// </summary>
         /// <returns></returns>
         public IConnection GetConnection();

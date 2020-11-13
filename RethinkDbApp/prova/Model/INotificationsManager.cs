@@ -32,10 +32,10 @@ namespace Rethink.Model
         public T GetNotificationOrNull<T>(Guid id) where T : Notification;
 
         /// <summary>
-        /// Richiede al db tutte le notifiche avvenute in una certa data
+        /// Richiede al db tutte le notifiche avvenute in una certa data, è sufficente impostare giorno/mese/anno
         /// </summary>
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
-        /// <param name="date">data presa in considerazione</param>
+        /// <param name="date">data presa in considerazione, è sufficente impostargli giorno/mese/anno</param>
         /// <returns>Lista delle notifiche in quella data</returns>
         public IList<T> GetNotificationsOrNull<T>(DateTime date) where T : Notification;
 

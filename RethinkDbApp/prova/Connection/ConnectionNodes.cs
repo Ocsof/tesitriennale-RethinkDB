@@ -2,6 +2,7 @@
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using RethinkDb.Driver.Net.Clustering;
+using RethinkDbApp.Exception;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,6 @@ namespace Rethink.Connection
             {
                 //Ok per single connection
                 var R = RethinkDb.Driver.RethinkDB.R;
-
                 string[] nodi = new string[this.listNodi.Count];
                 int position = 0;
                 foreach(DbOptions node in listNodi)
@@ -36,17 +36,20 @@ namespace Rethink.Connection
                     nodi[position] = node.HostPort;
                     position++;
                 }
-                this.conn = R.ConnectionPool()
-                        /* .Seed(new[] { this.listNodi.ElementAt(0).HostPort, this.listNodi.ElementAt(1).HostPort, listNodi.ElementAt(2).HostPort, listNodi.ElementAt(3).HostPort, listNodi.ElementAt(4).HostPort 
-                                    })
-                        */
+                try
+                {
+                    this.conn = R.ConnectionPool()
                         .Seed(nodi)
                         .PoolingStrategy(new RoundRobinHostPool())
                         .Discover(true)
+                        .InitialTimeout(listNodi.First().Timeout)
                         .Connect();
-         
-
-                var result = R.Now().Run<DateTimeOffset>(conn);  // forse è da togliere
+                }
+                catch (RethinkDb.Driver.ReqlDriverError)  //viene catturata se dopo 20 secondi non è riuscito a connettersi
+                {
+                    throw new ConnectionFailureException();
+                }
+               var result = R.Now().Run<DateTimeOffset>(conn);  // forse è da togliere
             }
 
             if (!conn.AnyOpen)

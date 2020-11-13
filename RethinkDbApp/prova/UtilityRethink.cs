@@ -30,7 +30,7 @@ namespace Rethink
             IList<DbOptions> listNodi = new List<DbOptions>();
             foreach (String hostPort in hostsPorts)
             {
-                listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 60 });
+                listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 20 });
             }
             this.connection = new ConnectionNodes(listNodi);
             this.dbStore = new DbManager(this.connection);
