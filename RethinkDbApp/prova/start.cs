@@ -180,6 +180,8 @@ namespace Rethink
 
             /************************** Get di notifiche -----> ricerca per  ************************************************/
 
+            /************************** Test Notifier ************************************************/
+
             Console.ReadLine();
 
             utilityRethink.CloseConnection();
