@@ -89,7 +89,7 @@ namespace Rethink.ReactiveExtension
 
             this.changes = R.Db(dbName).Table("Notifications")
              //.Filter(notification => notification.G("Arg").Eq(arg))
-             //.Filter(notification => notification.G("Arg").)
+             //.Filter()
              .Changes()
              .RunChanges<T>(conn);
 

@@ -15,8 +15,7 @@ namespace Rethink.Model
 
         public override String ToString()
         {
-            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + 
-                            " Type: " + this.Type + " IdExec: " + this.IdExec.ToString();
+            string result = base.ToString() + " IdExec: " + this.IdExec.ToString();
             return result;
         }
     }

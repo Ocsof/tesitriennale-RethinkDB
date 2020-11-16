@@ -47,6 +47,14 @@ namespace Rethink.Model
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
         /// <param name="text">Testo preso in considerazione</param>
         /// <returns>Lista di notifiche con quel testo</returns>
-        public IList<T> GetNotificationsOrNull<T>(String text) where T : Notification;
+        public IList<T> GetNotificationsWithTextOrNull<T>(String text) where T : Notification;
+
+        /// <summary>
+        /// Richiede al db tutte le notifiche con un certo argomento
+        /// </summary>
+        /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
+        /// <param name="arg">Argomento richiesto</param>
+        /// <returns></returns>
+        public IList<T> GetNotificationsWithArgOrNull<T>(String arg) where T : Notification;
     }
 }

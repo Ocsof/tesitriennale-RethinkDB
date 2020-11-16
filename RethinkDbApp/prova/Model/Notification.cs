@@ -40,7 +40,8 @@ namespace Rethink.Model
 
         public override String ToString()
         {
-            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() + " Text: " + this.Text + " Type: " + this.Type;
+            string result = "Id: " + this.Id.ToString() + " Date: " + this.Date.ToString() 
+                    + " Text: " + this.Text + " Type: " + this.Type + " Arg: " + this.Arg;
             return result;
         }
     }

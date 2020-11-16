@@ -59,13 +59,12 @@ namespace Rethink
             **********************************************************************************************************************************/
 
             /*
-            Guid id2 = new Guid("00000000-0000-0000-0000-000000000000");
+            Guid id2 = new Guid("335d6447-c1b6-4d7a-920a-ae5e31228f0e");
             notificationsManager.DeleteNotification(id2);
-            id2 = new Guid("00000000-0000-0000-0000-000000000000");
-            notificationsManager.DeleteNotification(id2);
-            id2 = new Guid("00000000-0000-0000-0000-000000000000");
+            id2 = new Guid("ba2be3d5-71c3-4461-9ec6-8345ac82a16b");
             notificationsManager.DeleteNotification(id2);
             */
+            
 
             Console.WriteLine("****************** Test NotificationsManager ***************");
             Console.WriteLine();
@@ -103,8 +102,10 @@ namespace Rethink
                 Arg = CreateRandomString(),
                 IdExec = idExec
             };
-            Console.WriteLine("Notifica 1: " + notificationNewData.ToString());
-            Console.WriteLine("Notifica 2: " + notificationExecution.ToString());
+            Console.WriteLine("Notifica di new data inserita: ");
+            Console.WriteLine(notificationNewData.ToString());
+            Console.WriteLine("Notifica di esecuzione inserita: ");
+            Console.WriteLine(notificationExecution.ToString());
 
             notificationsManager.NewNotification(notificationNewData);
             notificationsManager.NewNotification(notificationExecution);
@@ -125,7 +126,7 @@ namespace Rethink
             notificationExecution = notificationsManager.GetNotificationOrNull<NotificationExec>(idNewData);
             if(notificationExecution != null)
             {
-                Console.WriteLine("Notifica: " + notificationExecution.ToString()); //qui non ci entra perchè è null
+                Console.WriteLine("Notifica : " + notificationExecution.ToString()); //qui non ci entra perchè è null
             }
 
             //non esiste notifica con questo id casuale per ora
@@ -139,14 +140,16 @@ namespace Rethink
             notificationNewData = notificationsManager.GetNotificationOrNull<NotificationNewData>(idNewData);
             if (notificationNewData != null)
             {
-                Console.WriteLine("Notifica: " + notificationNewData.ToString());
+                Console.WriteLine("Notifica con id: " + idNewData.ToString() + " : ");
+                Console.WriteLine(notificationNewData.ToString());
             }
 
             //qui tutto ok ed entra nell'if
             notificationExecution = notificationsManager.GetNotificationOrNull<NotificationExec>(idExecution);
             if (notificationExecution != null)
             {
-                Console.WriteLine("Notifica: " + notificationExecution.ToString()); 
+                Console.WriteLine("Notifica con id: " + idExecution.ToString() + " : ");
+                Console.WriteLine(notificationExecution.ToString()); 
             }
 
             Console.WriteLine();
@@ -165,15 +168,49 @@ namespace Rethink
             IList<NotificationNewData> listNotificationNewData = notificationsManager.GetNotificationsOrNull<NotificationNewData>(newDataDate);
             if(listNotificationNewData.Count != 0)
             {
-                foreach(NotificationNewData not in listNotificationNewData)
+                Console.WriteLine("Notifiche di new data in data: " + newDataDate.ToString() + ": ");
+                foreach (NotificationNewData not in listNotificationNewData)
                 {
-                    Console.WriteLine("Notifica: " + not.ToString());
+                    Console.WriteLine(not.ToString());
                     Console.WriteLine();
                 }
             }
             IList<NotificationExec> listNotificationExecution = notificationsManager.GetNotificationsOrNull<NotificationExec>(newDataDate);
             if (listNotificationExecution.Count != 0)
             {
+                Console.WriteLine("Notifiche di exec in data: " + newDataDate.ToString() + ": ");
+                foreach (NotificationExec not in listNotificationExecution)
+                {
+                    Console.WriteLine(not.ToString());
+                    Console.WriteLine();
+                }
+            }
+            notificationsManager.DeleteNotification(idNewData);
+            notificationsManager.DeleteNotification(idExecution);
+
+            /************************** Get di notifiche -----> ricerca per Text ************************************************/
+
+            Console.WriteLine("-------- Get di notifiche -----> ricerca per Text ----------");
+            Console.WriteLine();
+
+            notificationsManager.NewNotification(notificationNewData);
+            notificationsManager.NewNotification(notificationExecution);
+            string textNewData = notificationNewData.Text;
+            string textExec = notificationExecution.Text;
+            listNotificationNewData = notificationsManager.GetNotificationsWithTextOrNull<NotificationNewData>(textNewData);
+            if (listNotificationNewData.Count != 0)
+            {
+                Console.WriteLine("Notifiche di new data con text: " + textNewData);
+                foreach (NotificationNewData not in listNotificationNewData)
+                {
+                    Console.WriteLine(not.ToString());
+                    Console.WriteLine();
+                }
+            }
+            listNotificationExecution = notificationsManager.GetNotificationsWithTextOrNull<NotificationExec>(textExec);
+            if (listNotificationExecution.Count != 0)
+            {
+                Console.WriteLine("Notifiche di exec con text: " + textExec);
                 foreach (NotificationExec not in listNotificationExecution)
                 {
                     Console.WriteLine("Notifica: " + not.ToString());
@@ -183,10 +220,42 @@ namespace Rethink
             notificationsManager.DeleteNotification(idNewData);
             notificationsManager.DeleteNotification(idExecution);
 
-            /************************** Get di notifiche -----> ricerca per  ************************************************/
+            /************************** Get di notifiche -----> ricerca per Arg ************************************************/
+
+            Console.WriteLine("-------- Get di notifiche -----> ricerca per Arg ----------");
+            Console.WriteLine();
+
+            notificationsManager.NewNotification(notificationNewData);
+            notificationsManager.NewNotification(notificationExecution);
+            string argNewData = notificationNewData.Arg;
+            string argExec = notificationExecution.Arg;
+            listNotificationNewData = notificationsManager.GetNotificationsWithArgOrNull<NotificationNewData>(argNewData);
+            if (listNotificationNewData.Count != 0)
+            {
+                Console.WriteLine("Notifica di new data con Arg: " + argNewData);
+                foreach (NotificationNewData not in listNotificationNewData)
+                {
+                    Console.WriteLine(not.ToString());
+                    Console.WriteLine();
+                }
+            }
+            listNotificationExecution = notificationsManager.GetNotificationsWithArgOrNull<NotificationExec>(argExec);
+            if (listNotificationExecution.Count != 0)
+            {
+                Console.WriteLine("Notifica di exec con Arg: " + argExec);
+                foreach (NotificationExec not in listNotificationExecution)
+                {
+                    Console.WriteLine(not.ToString());
+                    Console.WriteLine();
+                }
+            }
+            notificationsManager.DeleteNotification(idNewData);
+            notificationsManager.DeleteNotification(idExecution);
+
 
             /************************** Test Notifier ************************************************/
 
+            /*
             Console.WriteLine("****************** Test Notifier ***************");
             Console.WriteLine();
 
@@ -246,6 +315,7 @@ namespace Rethink
             notificatorsExec.StopListening();
             notificatorsNewData.StopListening();
 
+            */
 
             Console.ReadLine();
 

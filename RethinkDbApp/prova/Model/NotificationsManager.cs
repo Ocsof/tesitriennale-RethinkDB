@@ -78,39 +78,51 @@ namespace Rethink.Model
         public IList<T> GetNotificationsOrNull<T>(DateTime date) where T : Notification
         {
             var conn = this.connection.GetConnection();
-            Cursor<T> notification;
-            Console.WriteLine(date);
-            Date data = new Date(date);
+            Cursor<T> notifications;
                            
-            notification = R.Db(this.dbName).Table(this.tableName)
-                       .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(data)))
+            notifications = R.Db(this.dbName).Table(this.tableName)
+                       .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Date").Date().Eq(new Date(date))))
                        .Run<T>(conn);
+  
+            return notifications.ToList();
 
-            IList<T> list = notification.ToList();
-            return list;
-                       
             /*
-            //versione con indice date (su campo date)
+            //versione con indice date (su campo Date)
             Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(date).OptArg("index", "date").Run(conn); ;
             */
         }
 
-        public IList<T> GetNotificationsOrNull<T>(string text) where T : Notification
+        public IList<T> GetNotificationsWithTextOrNull<T>(string text) where T : Notification
         {
             var conn = this.connection.GetConnection();
+            Cursor<T> notifications;
 
-            Cursor<T> notifications = R.Db(this.dbName).Table(this.tableName).Filter(
-                                        notification => notification.G("Text").Eq(text)
-                                      ).Run(conn);
-
+            notifications = R.Db(this.dbName).Table(this.tableName)
+                       .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Text").Eq(text)))
+                       .Run<T>(conn);
+          
             /*
-            //versione con indice text (su campo text)
+            //versione con indice text (su campo Text)
             Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(text).OptArg("index", "text").Run(conn); ;
             */
 
             return notifications.ToList();
         }
 
-        
+        public IList<T> GetNotificationsWithArgOrNull<T>(string arg) where T : Notification
+        {
+            var conn = this.connection.GetConnection();
+            Cursor<T> notifications;
+
+            notifications = R.Db(this.dbName).Table(this.tableName)
+                       .Filter(notification => notification.G("Type").Eq(typeof(T).Name).And(notification.G("Arg").Eq(arg)))
+                       .Run<T>(conn);
+            /*
+            //versione con indice arg (su campo Arg)
+            Cursor<T> notificationss = R.Db(this.dbName).Table(nameof(Notification)).GetAll(arg).OptArg("index", "arg").Run(conn); ;
+            */
+
+            return notifications.ToList();
+        }
     }
 }
