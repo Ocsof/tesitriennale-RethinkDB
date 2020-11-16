@@ -25,10 +25,10 @@ namespace Rethink
         public INotificationsManager GetNotificationsManager();
 
         /// <summary>
-        /// Metodo per ottenere un notificatore
+        /// Metodo per ottenere un notificatore di notifiche di un certo tipo specificato 
         /// </summary>
         /// <returns>Notificatore</returns>
-        public IRXNotifier GetNotifier();
+        public IRXNotifier<T> GetNotifier<T>() where T : Notification;
 
 
         /// <summary>

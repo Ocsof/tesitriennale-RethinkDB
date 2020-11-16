@@ -16,7 +16,7 @@ namespace Rethink
         private readonly IConnectionNodes connection;
         private readonly IDbManager dbStore;
         private readonly INotificationsManager manageNotifications;
-        private readonly IRXNotifier rxNotifier;
+        //private readonly IRXNotifier<T> rxNotifier;
 
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Rethink
             this.connection = new ConnectionNodes(listNodi);
             this.dbStore = new DbManager(this.connection);
             this.manageNotifications = new NotificationsManager(this.connection);
-            this.rxNotifier = new RXNotifier(this.dbStore, this.connection);
+            //this.rxNotifier = new RXNotifier(this.dbStore, this.connection);
             this.CreateDb(dbName);
         }
 
@@ -60,9 +60,11 @@ namespace Rethink
             return this.manageNotifications;
         }
 
-        public IRXNotifier GetNotifier()
+        public IRXNotifier<T> GetNotifier<T>() where T : Notification
         {
-            return this.rxNotifier;
+            //chiedere se cosi è ok, per non rendere generica la classe Utility Rethink
+            IRXNotifier<T> rxNotifier = new RXNotifier<T>(this.connection);
+            return rxNotifier;
         }
    
         public void CloseConnection()

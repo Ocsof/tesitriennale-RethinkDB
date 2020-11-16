@@ -24,6 +24,11 @@ namespace Rethink.Model
         public DateTime Date { get; set; }
 
         /// <summary>
+        /// Argomento della notifica
+        /// </summary>
+        public string Arg { get; set; }
+
+        /// <summary>
         /// Descrizione della notifica
         /// </summary>
         public string Text { get; set; }

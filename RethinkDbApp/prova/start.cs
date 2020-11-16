@@ -23,7 +23,7 @@ namespace Rethink
 
             var dbManager = utilityRethink.GetDbManager();
             var notificationsManager = utilityRethink.GetNotificationsManager();
-            var notificators = utilityRethink.GetNotificationsManager();
+            
 
             /********** Test Connettività **********/
 
@@ -57,10 +57,13 @@ namespace Rethink
             /***********************************************************************************************************************************
             ******************************************* Test NotificationsManager **********************************************************
             **********************************************************************************************************************************/
+
             /*
-            Guid id2 = new Guid("6c69205d-805b-4d89-a7e0-7948a80496fc");
+            Guid id2 = new Guid("00000000-0000-0000-0000-000000000000");
             notificationsManager.DeleteNotification(id2);
-            id2 = new Guid("f5b5ab75-eaba-48f9-9d9c-635e0cd2273d");
+            id2 = new Guid("00000000-0000-0000-0000-000000000000");
+            notificationsManager.DeleteNotification(id2);
+            id2 = new Guid("00000000-0000-0000-0000-000000000000");
             notificationsManager.DeleteNotification(id2);
             */
 
@@ -86,6 +89,7 @@ namespace Rethink
                 Id = idNewData,
                 Date = DateTime.Now,
                 Text = CreateRandomString(),
+                Arg = CreateRandomString(),
                 Table = CreateRandomString()
             };
 
@@ -96,6 +100,7 @@ namespace Rethink
                 Id = idExecution,
                 Date = DateTime.Now,//new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
                 Text = CreateRandomString(),
+                Arg = CreateRandomString(),
                 IdExec = idExec
             };
             Console.WriteLine("Notifica 1: " + notificationNewData.ToString());
@@ -181,6 +186,66 @@ namespace Rethink
             /************************** Get di notifiche -----> ricerca per  ************************************************/
 
             /************************** Test Notifier ************************************************/
+
+            Console.WriteLine("****************** Test Notifier ***************");
+            Console.WriteLine();
+
+            var notificatorsExec = utilityRethink.GetNotifier<NotificationExec>();
+            var notificatorsNewData = utilityRethink.GetNotifier<NotificationNewData>();
+
+            Console.WriteLine("-------------- Listen normale -------------");
+            Console.WriteLine();
+
+            notificatorsExec.Listen();
+            notificatorsNewData.Listen();
+
+            //Next simulate 2 inserts into Notification table.
+            Thread.Sleep(3000);
+
+            Task.Run(() =>
+            {
+                notificationsManager.NewNotification<NotificationExec>(new NotificationExec
+                {
+                    Id = Guid.NewGuid(),
+                    Date = DateTime.Now,
+                    Text = CreateRandomString(),
+                    Arg = CreateRandomString(),
+                    IdExec = Guid.NewGuid()
+                });
+            });
+
+            Console.WriteLine();
+            Thread.Sleep(10000);
+
+            Task.Run(() =>
+            {
+                notificationsManager.NewNotification<NotificationNewData>(new NotificationNewData
+                {
+                    Id = Guid.NewGuid(),
+                    Date = DateTime.Now,
+                    Text = CreateRandomString(),
+                    Arg = CreateRandomString(),
+                    Table = CreateRandomString()
+                });
+            });
+
+            Console.WriteLine();
+            Thread.Sleep(10000);
+
+            notificatorsExec.StopListening();
+            notificatorsNewData.StopListening();
+
+            Console.WriteLine("-------------- Listen Per argomento -------------");
+            Console.WriteLine();
+
+
+
+            Console.WriteLine("-------------- Listen per lista di argomenti -------------");
+            Console.WriteLine();
+
+            notificatorsExec.StopListening();
+            notificatorsNewData.StopListening();
+
 
             Console.ReadLine();
 
