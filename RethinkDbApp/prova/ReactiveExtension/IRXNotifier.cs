@@ -1,4 +1,5 @@
 ﻿using Rethink.Model;
+using RethinkDb.Driver.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,13 +14,13 @@ namespace Rethink.ReactiveExtension
         /// <summary>
         /// Test per le notifiche
         /// </summary>
-        public void Listen();
+        public IObservable<Change<T>> Listen();
 
         /// <summary>
         /// Rimane in ascolto solo per le notifiche con un determinato argomento
         /// </summary>
         /// <param name="arg">argomento della notifica</param>
-        public void ListenWithArg(string arg);
+        public IObservable<Change<T>> ListenWithArg(string arg);
 
         /// <summary>
         /// Rimane in ascolto solo per le notifiche che hanno uno degli argomenti della lista

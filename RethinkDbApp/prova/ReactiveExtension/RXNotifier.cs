@@ -2,6 +2,7 @@
 using Rethink.Connection;
 using Rethink.Model;
 using RethinkDb.Driver;
+using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Model;
 using RethinkDb.Driver.Net;
 using System;
@@ -29,36 +30,19 @@ namespace Rethink.ReactiveExtension
             this.dbName = this.rethinkDbConnection.GetNodi().ElementAt(0).Database;
         }
 
-        public void Listen()
-        {
-            var onCompleted = 0;
-            var onError = 0;
-            var onNext = 0;
-            
+        public IObservable<Change<T>> Listen()
+        {           
             var conn = this.rethinkDbConnection.GetConnection();
 
             this.changes = R.Db(dbName).Table("Notifications")
             .Changes()
             .RunChanges<T>(conn);
 
-            var observable = changes.ToObservable();
-
-            //use a new thread if you want to continue,
-            //otherwise, subscription will block.
-            observable.SubscribeOn(NewThreadScheduler.Default) 
-                .Subscribe(
-                    x => OnNext(x, ref onNext),
-                    e => OnError(e, ref onError),
-                    () => OnCompleted(ref onCompleted)
-                );
+            return changes.ToObservable(); //observable          
         }
 
-        public void ListenWithArg(string arg)
+        public IObservable<Change<T>> ListenWithArg(string arg)
         {            
-            var onCompleted = 0;
-            var onError = 0;
-            var onNext = 0;
-
             var conn = this.rethinkDbConnection.GetConnection();
 
             this.changes = R.Db(dbName).Table("Notifications")
@@ -66,77 +50,34 @@ namespace Rethink.ReactiveExtension
              .Changes()
              .RunChanges<T>(conn);
 
-            var observable = changes.ToObservable();
-
-            //use a new thread if you want to continue,
-            //otherwise, subscription will block.
-            observable.SubscribeOn(NewThreadScheduler.Default)
-                .Subscribe(
-                    x => OnNext(x, ref onNext),
-                    e => OnError(e, ref onError),
-                    () => OnCompleted(ref onCompleted)
-                );
+            return changes.ToObservable();            
         }
 
         public void ListenWithOneOfTheArguments(IList<string> argsList)
         {
             IList<string> list = new List<string>();
-            var onCompleted = 0;
-            var onError = 0;
-            var onNext = 0;
 
             var conn = this.rethinkDbConnection.GetConnection();
+            
 
             this.changes = R.Db(dbName).Table("Notifications")
              //.Filter(notification => notification.G("Arg").Eq(arg))
-             //.Filter()
+             .Filter(notification => 
+                R.Expr(R.Array(argsList.ToArray())).Contains(notification.G("Args"))
+             )
              .Changes()
              .RunChanges<T>(conn);
 
             var observable = changes.ToObservable();
 
-            //use a new thread if you want to continue,
-            //otherwise, subscription will block.
-            observable.SubscribeOn(NewThreadScheduler.Default)
-                .Subscribe(
-                    x => OnNext(x, ref onNext),
-                    e => OnError(e, ref onError),
-                    () => OnCompleted(ref onCompleted)
-                );
         }
+
 
         public void StopListening()
         {
             this.changes.Close(); //chiude la listening
             Console.WriteLine("Stop Listening");
             Thread.Sleep(3000);
-        }
-
-        private void OnCompleted(ref int onCompleted)
-        {
-            Console.WriteLine("On Completed.");
-            onCompleted++;
-        }
-
-        private void OnError(Exception obj, ref int onError)
-        {
-            Console.WriteLine("On Error");
-            Console.WriteLine(obj.Message);
-            onError++;
-        }
-
-        private void OnNext<T>(Change<T> obj, ref int onNext) where T : Notification
-        {
-            Console.WriteLine("On Next");
-            var oldValue = obj.OldValue;
-
-            onNext++;
-            Console.WriteLine("New Value: " + obj.NewValue.ToString());
-            if (oldValue != null)
-            { //nel caso di un update
-                Console.WriteLine("Old Value: " + oldValue.ToString());
-            }
-
         }
 
     }

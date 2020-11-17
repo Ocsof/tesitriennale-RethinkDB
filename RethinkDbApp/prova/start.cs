@@ -1,8 +1,11 @@
 ﻿using Rethink.Model;
 using RethinkDb.Driver;
+using RethinkDb.Driver.Model;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,13 +61,15 @@ namespace Rethink
             ******************************************* Test NotificationsManager **********************************************************
             **********************************************************************************************************************************/
 
-            /*
-            Guid id2 = new Guid("335d6447-c1b6-4d7a-920a-ae5e31228f0e");
-            notificationsManager.DeleteNotification(id2);
-            id2 = new Guid("ba2be3d5-71c3-4461-9ec6-8345ac82a16b");
-            notificationsManager.DeleteNotification(id2);
-            */
             
+            Guid id2 = new Guid("925fb135-987e-4020-a47c-483ce103b069");
+            notificationsManager.DeleteNotification(id2);
+            id2 = new Guid("48e4041b-fe8e-429e-bfba-6951ee2515b3");
+            notificationsManager.DeleteNotification(id2);
+            id2 = new Guid("34d51a8f-a115-4476-b72d-f2631143fc11");
+            notificationsManager.DeleteNotification(id2);
+            
+
 
             Console.WriteLine("****************** Test NotificationsManager ***************");
             Console.WriteLine();
@@ -163,7 +168,6 @@ namespace Rethink
 
             notificationsManager.NewNotification(notificationNewData);
             notificationsManager.NewNotification(notificationExecution);
-            notificationNewData.Id = Guid.NewGuid();
             DateTime newDataDate = notificationNewData.Date;
             IList<NotificationNewData> listNotificationNewData = notificationsManager.GetNotificationsOrNull<NotificationNewData>(newDataDate);
             if(listNotificationNewData.Count != 0)
@@ -255,18 +259,30 @@ namespace Rethink
 
             /************************** Test Notifier ************************************************/
 
-            /*
+            /*** prova ****/
+
+            
             Console.WriteLine("****************** Test Notifier ***************");
             Console.WriteLine();
 
             var notificatorsExec = utilityRethink.GetNotifier<NotificationExec>();
             var notificatorsNewData = utilityRethink.GetNotifier<NotificationNewData>();
+            
 
             Console.WriteLine("-------------- Listen normale -------------");
             Console.WriteLine();
 
-            notificatorsExec.Listen();
-            notificatorsNewData.Listen();
+            var onCompleted = 0;
+            var onError = 0;
+            var onNext = 0;
+
+            IObservable<Change<NotificationExec>> observervableExec = notificatorsExec.Listen();
+            observervableExec.SubscribeOn(NewThreadScheduler.Default)
+                .Subscribe(
+                    x => OnNext(x, ref onNext), 
+                    e => OnError(e, ref onError),
+                    () => OnCompleted(ref onCompleted)
+                );
 
             //Next simulate 2 inserts into Notification table.
             Thread.Sleep(3000);
@@ -288,13 +304,13 @@ namespace Rethink
 
             Task.Run(() =>
             {
-                notificationsManager.NewNotification<NotificationNewData>(new NotificationNewData
+                notificationsManager.NewNotification<NotificationExec>(new NotificationExec
                 {
                     Id = Guid.NewGuid(),
                     Date = DateTime.Now,
                     Text = CreateRandomString(),
                     Arg = CreateRandomString(),
-                    Table = CreateRandomString()
+                    IdExec = Guid.NewGuid()
                 });
             });
 
@@ -302,7 +318,7 @@ namespace Rethink
             Thread.Sleep(10000);
 
             notificatorsExec.StopListening();
-            notificatorsNewData.StopListening();
+            //notificatorsNewData.StopListening();
 
             Console.WriteLine("-------------- Listen Per argomento -------------");
             Console.WriteLine();
@@ -313,9 +329,9 @@ namespace Rethink
             Console.WriteLine();
 
             notificatorsExec.StopListening();
-            notificatorsNewData.StopListening();
+            //notificatorsNewData.StopListening();
 
-            */
+            
 
             Console.ReadLine();
 
@@ -369,6 +385,33 @@ namespace Rethink
             {
                 notificationsManager.DeleteNotification(id);
             }
+        }
+
+        private static void OnCompleted(ref int onCompleted)
+        {
+            Console.WriteLine("On Completed.");
+            onCompleted++;
+        }
+
+        private static void OnError(Exception obj, ref int onError)
+        {
+            Console.WriteLine("On Error");
+            Console.WriteLine(obj.Message);
+            onError++;
+        }
+
+        private static void OnNext<T>(Change<T> obj, ref int onNext) where T : Notification
+        {
+            Console.WriteLine("On Next");
+            var oldValue = obj.OldValue;
+
+            onNext++;
+            Console.WriteLine("New Value: " + obj.NewValue.ToString());
+            if (oldValue != null)
+            { //nel caso di un update
+                Console.WriteLine("Old Value: " + oldValue.ToString());
+            }
+
         }
 
         private static String CreateRandomString()
