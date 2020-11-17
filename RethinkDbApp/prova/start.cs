@@ -379,11 +379,8 @@ namespace Rethink
             Console.WriteLine("-------------- Listen per lista di argomenti -------------");
             Console.WriteLine();
 
-            IList<string> argsList = new List<string>();
-            argsList.Add("ciao");
-            argsList.Add("ciuppa");
 
-            IObservable<Change<NotificationExec>> observervableExecForArgs = notificatorsExec.ListenWithOneOfTheArguments(argsList);
+            IObservable<Change<NotificationExec>> observervableExecForArgs = notificatorsExec.ListenWithOneOfTheArguments("ciao", "ciuppa");
             observervableExecForArgs.SubscribeOn(NewThreadScheduler.Default)
                 .Subscribe(
                     x => OnNext(x, ref onNext),
