@@ -6,6 +6,7 @@ using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Model;
 using RethinkDb.Driver.Net;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Rethink.ReactiveExtension
         private readonly string dbName;
         private readonly static RethinkDB R = RethinkDB.R;
         private  Cursor<Change<T>> changes;
+        ConcurrentDictionary<Guid, Cursor<Change<T>>> changesDict;
 
         public RXNotifier(IConnectionNodes rethinkDbConnection) //IConnectionPooling
         {
@@ -30,54 +32,33 @@ namespace Rethink.ReactiveExtension
             this.dbName = this.rethinkDbConnection.GetNodi().ElementAt(0).Database;
         }
 
-        public IObservable<Change<T>> Listen()
-        {           
-            var conn = this.rethinkDbConnection.GetConnection();
 
-            this.changes = R.Db(dbName).Table("Notifications")
-            .Changes()
-            .RunChanges<T>(conn);
-
-            return changes.ToObservable(); //observable          
-        }
-
-        public IObservable<Change<T>> ListenWithArg(string arg)
-        {            
-            var conn = this.rethinkDbConnection.GetConnection();
-
-            this.changes = R.Db(dbName).Table("Notifications")
-             .Filter( notification => notification.G("Arg").Eq(arg))
-             .Changes()
-             .RunChanges<T>(conn);
-
-            return changes.ToObservable();            
-        }
-
-        public void ListenWithOneOfTheArguments(IList<string> argsList)
-        {
-            IList<string> list = new List<string>();
-
+        public IObservable<Change<T>> ListenWithOneOfTheArguments(params string[]  argsList)
+        {      
             var conn = this.rethinkDbConnection.GetConnection();
             
-
-            this.changes = R.Db(dbName).Table("Notifications")
-             //.Filter(notification => notification.G("Arg").Eq(arg))
+            var changes = R.Db(dbName).Table("Notifications")
              .Filter(notification => 
-                R.Expr(R.Array(argsList.ToArray())).Contains(notification.G("Args"))
+                R.Expr(R.Array(argsList.ToArray())).Contains(notification.G("Arg"))
              )
              .Changes()
              .RunChanges<T>(conn);
 
-            var observable = changes.ToObservable();
-
+            Guid guid = Guid.NewGuid();
+            changesDict.TryAdd(guid, changes);  //mettere l'if        
+          
+            return changes.ToObservable();
         }
 
 
-        public void StopListening()
+        public void StopListening(Guid guid)
         {
-            this.changes.Close(); //chiude la listening
-            Console.WriteLine("Stop Listening");
-            Thread.Sleep(3000);
+            if(this.changesDict.TryGetValue(guid, out IObservable<Change<T>> change))
+            {
+                change.Close(); //chiude la listening
+                Thread.Sleep(3000);
+            }
+
         }
 
     }
