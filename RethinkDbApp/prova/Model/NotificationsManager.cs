@@ -2,6 +2,7 @@
 using RethinkDb.Driver;
 using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
+using RethinkDbApp.Exception;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -36,8 +37,8 @@ namespace Rethink.Model
             var notifications = all.ToList();
             if (notifications.Count > 0)
             {
-                // update
-                R.Db(this.dbName).Table(this.tableName).Get(notifications.First().Id).Update(notification).RunWrite(conn);
+                //se la notifica è già presente sul db:
+                throw new NewGuidException();
             }
             else
             {

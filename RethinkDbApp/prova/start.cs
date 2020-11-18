@@ -1,6 +1,7 @@
 ﻿using Rethink.Model;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Model;
+using RethinkDbApp.ReactiveExtension;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -61,12 +62,12 @@ namespace Rethink
             ******************************************* Test NotificationsManager **********************************************************
             **********************************************************************************************************************************/
 
-            /*
-            Guid id2 = new Guid("15e71eb6-1609-41d7-8e0e-3f4b18d85e91");
+            
+            Guid id2 = new Guid("f903aa68-864c-4b97-8f53-9ef191017001");
             notificationsManager.DeleteNotification(id2);
-            id2 = new Guid("81ed6955-5069-4980-b274-db7c23252b76");
+            id2 = new Guid("f1a17ce5-4d6a-4825-a145-c09e62b25c22");
             notificationsManager.DeleteNotification(id2);
-            id2 = new Guid("b9112409-a48b-4bc7-b89d-ea048a0d42ab");
+            id2 = new Guid("8d440084-42d3-4153-82ff-70671ecb6f00");
             notificationsManager.DeleteNotification(id2);
             id2 = new Guid("5a2266b7-7003-4fac-aa15-402a9fbcd5d1");
             notificationsManager.DeleteNotification(id2);
@@ -76,7 +77,7 @@ namespace Rethink
             notificationsManager.DeleteNotification(id2);
             id2 = new Guid("dd5b1215-7f39-42ab-bc4b-103fea7b8ef9");
             notificationsManager.DeleteNotification(id2);
-            */
+            
 
             Console.WriteLine("****************** Test NotificationsManager ***************");
             Console.WriteLine();
@@ -120,6 +121,8 @@ namespace Rethink
             Console.WriteLine(notificationExecution.ToString());
 
             notificationsManager.NewNotification(notificationNewData);
+            notificationsManager.NewNotification(notificationNewData);
+
             notificationsManager.NewNotification(notificationExecution);
             notificationsManager.DeleteNotification(idNewData);
             notificationsManager.DeleteNotification(idExecution);
@@ -196,6 +199,7 @@ namespace Rethink
                     Console.WriteLine();
                 }
             }
+
             notificationsManager.DeleteNotification(idNewData);
             notificationsManager.DeleteNotification(idExecution);
 
@@ -278,109 +282,9 @@ namespace Rethink
             var onError = 0;
             var onNext = 0;
 
-            /*
-            Console.WriteLine("-------------- Listen normale -------------");
-            Console.WriteLine();
 
-            IObservable<Change<NotificationExec>> observervableExec = notificatorsExec.Listen();
-            observervableExec.SubscribeOn(NewThreadScheduler.Default)
-                .Subscribe(
-                    x => OnNext(x, ref onNext), 
-                    e => OnError(e, ref onError),
-                    () => OnCompleted(ref onCompleted)
-                );
-
-            //Next simulate 2 inserts into Notification table.
-            Thread.Sleep(3000);
-
-            Task.Run(() =>
-            {
-                notificationsManager.NewNotification<NotificationExec>(new NotificationExec
-                {
-                    Id = Guid.NewGuid(),
-                    Date = DateTime.Now,
-                    Text = CreateRandomString(),
-                    Arg = CreateRandomString(),
-                    IdExec = Guid.NewGuid()
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-
-            Task.Run(() =>
-            {
-                notificationsManager.NewNotification<NotificationExec>(new NotificationExec
-                {
-                    Id = Guid.NewGuid(),
-                    Date = DateTime.Now,
-                    Text = CreateRandomString(),
-                    Arg = CreateRandomString(),
-                    IdExec = Guid.NewGuid()
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-
-            notificatorsExec.StopListening();
-            //notificatorsNewData.StopListening();
-            Console.WriteLine();
-
-            Console.WriteLine("-------------- Listen Per argomento -------------");
-            Console.WriteLine();
-
-            IObservable<Change<NotificationExec>> observervableExecForArg = notificatorsExec.ListenWithArg("ciao");
-            observervableExecForArg.SubscribeOn(NewThreadScheduler.Default)
-                .Subscribe(
-                    x => OnNext(x, ref onNext),
-                    e => OnError(e, ref onError),
-                    () => OnCompleted(ref onCompleted)
-                );
-
-            //Next simulate 2 inserts into Notification table.
-            Thread.Sleep(3000);
-
-            Task.Run(() =>
-            {
-                notificationsManager.NewNotification<NotificationExec>(new NotificationExec
-                {
-                    Id = Guid.NewGuid(),
-                    Date = DateTime.Now,
-                    Text = CreateRandomString(),
-                    Arg = "ciao",
-                    IdExec = Guid.NewGuid()
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-
-            //qui non entra nella onNext perchè l'argomento della notifica inserita è "ciuppa"
-            Task.Run(() =>
-            {
-                notificationsManager.NewNotification<NotificationExec>(new NotificationExec
-                {
-                    Id = Guid.NewGuid(),
-                    Date = DateTime.Now,
-                    Text = CreateRandomString(),
-                    Arg = "ciuppa",
-                    IdExec = Guid.NewGuid()
-                });
-            });
-
-            Console.WriteLine();
-            Thread.Sleep(10000);
-
-            notificatorsExec.StopListening();
-            Console.WriteLine();
-
-            */
-            Console.WriteLine("-------------- Listen per lista di argomenti -------------");
-            Console.WriteLine();
-
-
-            IObservable<Change<NotificationExec>> observervableExecForArgs = notificatorsExec.ListenWithOneOfTheArguments("ciao", "ciuppa");
+            NotificationSubscription<NotificationExec> pair = notificatorsExec.ListenWithOneOfTheArguments("ciao", "ciuppa");
+            IObservable<Change<NotificationExec>> observervableExecForArgs = pair.Observable;
             observervableExecForArgs.SubscribeOn(NewThreadScheduler.Default)
                 .Subscribe(
                     x => OnNext(x, ref onNext),
@@ -437,7 +341,8 @@ namespace Rethink
             Console.WriteLine();
             Thread.Sleep(10000);
 
-            notificatorsExec.StopListening();
+            notificatorsExec.StopListening(pair.Guid);
+            //notificatorsExec.StopListening(pair);
             Console.WriteLine();
 
             //notificatorsNewData.StopListening();
