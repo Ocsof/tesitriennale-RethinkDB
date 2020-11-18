@@ -46,8 +46,8 @@ namespace Rethink
             Console.WriteLine("************ Test DbManager *************");
             Console.WriteLine();
 
-            //dbManager.CreateTable("Notifications");
-            //dbManager.CreateTable("Notifications");
+            dbManager.CreateTable("Notifications");
+            dbManager.CreateTable("Notifications");
             Console.WriteLine("Table List: " + dbManager.GetTablesList());
             //store.DelateTable("Notifications"); 
             dbManager.CreateIndex("Notifications", "Date");
