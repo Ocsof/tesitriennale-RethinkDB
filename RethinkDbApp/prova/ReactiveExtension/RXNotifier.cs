@@ -1,22 +1,15 @@
-﻿using Newtonsoft.Json.Linq;
-using Rethink.Connection;
+﻿using Rethink.Connection;
 using Rethink.Model;
 using RethinkDb.Driver;
-using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Model;
 using RethinkDb.Driver.Net;
 using RethinkDbApp.Exception;
 using RethinkDbApp.ReactiveExtension;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Rethink.ReactiveExtension
 {
@@ -25,7 +18,6 @@ namespace Rethink.ReactiveExtension
         private readonly IConnectionNodes rethinkDbConnection;
         private readonly string dbName;
         private readonly static RethinkDB R = RethinkDB.R;
-        //private  Cursor<Change<T>> changes;
         private readonly ConcurrentDictionary<Guid, Cursor<Change<T>>> changesDict;  //dizionario Thread safe
 
         public RXNotifier(IConnectionNodes rethinkDbConnection) //IConnectionPooling
@@ -47,11 +39,8 @@ namespace Rethink.ReactiveExtension
              .Changes()
              .RunChanges<T>(conn);
 
-            changes.ToObservable();
-
-            Guid guid = Guid.NewGuid();
-            NotificationSubscription<T> pair = new NotificationSubscription<T>(guid, changes.ToObservable());
-            if(changesDict.TryAdd(guid, changes))
+            NotificationSubscription<T> pair = new NotificationSubscription<T>(Guid.NewGuid(), changes.ToObservable());
+            if(changesDict.TryAdd(pair.Guid, changes))
             {
                 return pair;
             }
@@ -61,14 +50,16 @@ namespace Rethink.ReactiveExtension
 
 
         public void StopListening(Guid guid)
-        {
-            if(this.changesDict.TryGetValue(guid, out Cursor<Change<T>> change))
+        {           
+            if (this.changesDict.TryGetValue(guid, out Cursor<Change<T>> change))
             {
                 change.Close(); //chiude la listening
                 Thread.Sleep(3000);
             }
-            //valutare se tirare eccezione se non entra nell'if
-            throw new GetGuidException();
+            else //se non entra non trova il change con guid specificato:
+            {
+                throw new GetGuidException();
+            }          
         }
 
         public void StopListening(NotificationSubscription<T> pair)
@@ -78,7 +69,10 @@ namespace Rethink.ReactiveExtension
                 change.Close(); //chiude la listening
                 Thread.Sleep(3000);
             }
-            //valutare se tirare eccezione se non entra nell'if
+            else //se non entra non trova il change con guid specificato:
+            {               
+                throw new GetGuidException();
+            }          
         }
     }
      

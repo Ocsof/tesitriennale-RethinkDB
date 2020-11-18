@@ -45,11 +45,11 @@ namespace Rethink.Connection
                         .InitialTimeout(listNodi.First().Timeout)
                         .Connect();
                 }
-                catch (RethinkDb.Driver.ReqlDriverError)  //viene catturata se dopo 20 secondi non è riuscito a connettersi
+                catch (ReqlDriverError)  //viene catturata se dopo 20 secondi non è riuscito a connettersi
                 {
                     throw new ConnectionFailureException();
                 }
-               var result = R.Now().Run<DateTimeOffset>(conn);  // forse è da togliere
+                R.Now().Run<DateTimeOffset>(conn);  // forse è da togliere
             }
 
             if (!conn.AnyOpen)

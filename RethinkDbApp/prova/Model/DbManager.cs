@@ -1,13 +1,6 @@
 ﻿using Rethink.Connection;
 using RethinkDb.Driver;
-using RethinkDb.Driver.Ast;
-using RethinkDb.Driver.Net;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;  //namespace per il timer 
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
 
 namespace Rethink.Model
 {

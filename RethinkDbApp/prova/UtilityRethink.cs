@@ -1,23 +1,21 @@
 ﻿using Rethink.Connection;
 using Rethink.Model;
-using Rethink.ReactiveExtension;
-using RethinkDb.Driver.Ast;
 using RethinkDb.Driver;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using RethinkDbApp.Model;
 
 namespace Rethink
 {
+    /// <summary>
+    /// Libreria per la gestione del Db, della tabella "Notifiche" e per rimanere in ascolto sui cambiamenti della tabella "Notifications"
+    /// </summary>
     public class UtilityRethink : IUtilityRethink
     {
         private readonly static RethinkDB R = RethinkDB.R;
         private readonly IConnectionNodes connection;
-        private readonly IDbManager dbStore;
-        private readonly INotificationsManager manageNotifications;
-        //private readonly IRXNotifier<T> rxNotifier;
-
+        private readonly INotificationsManager notificationsManager;
+        private readonly IDbManager dbManager;
 
         /// <summary>
         /// Connettere l'app al cluster Rethinkdb in esecuzione
@@ -26,19 +24,22 @@ namespace Rethink
         /// <param name="hostsPorts">Lista di stringhe del tipo: "indirizzoip:porta"</param>
         public UtilityRethink(string dbName, IList<String> hostsPorts)
         {
-
             IList<DbOptions> listNodi = new List<DbOptions>();
             foreach (String hostPort in hostsPorts)
             {
                 listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 20 });
             }
             this.connection = new ConnectionNodes(listNodi);
-            this.dbStore = new DbManager(this.connection);
-            this.manageNotifications = new NotificationsManager(this.connection);
-            //this.rxNotifier = new RXNotifier(this.dbStore, this.connection);
+            this.dbManager = new DbManager(this.connection);
+            this.notificationsManager = new NotificationsManager(this.connection);       
             this.CreateDb(dbName);
         }
 
+        /// <summary>
+        /// Metodo che viene chiamato alla creazione dell'istanza "UtilityRethink"
+        /// Il db su cui ci si vuole connetter viene creato se non esiste 
+        /// </summary>
+        /// <param name="dbName"></param>
         private void CreateDb(string dbName)
         {
             var conn = this.connection.GetConnection();
@@ -52,21 +53,14 @@ namespace Rethink
 
         public IDbManager GetDbManager()
         {
-            return this.dbStore;
+            return this.dbManager;
         }
 
         public INotificationsManager GetNotificationsManager()
         {
-            return this.manageNotifications;
+            return this.notificationsManager;
         }
 
-        public IRXNotifier<T> GetNotifier<T>() where T : Notification
-        {
-            //chiedere se cosi è ok, per non rendere generica la classe Utility Rethink
-            IRXNotifier<T> rxNotifier = new RXNotifier<T>(this.connection);
-            return rxNotifier;
-        }
-   
         public void CloseConnection()
         {
             this.connection.CloseConnection();

@@ -1,7 +1,4 @@
-﻿using RethinkDb.Driver.Ast;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace Rethink.Model
 {

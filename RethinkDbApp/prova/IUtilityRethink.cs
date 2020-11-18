@@ -1,9 +1,5 @@
 ﻿using Rethink.Model;
-using Rethink.ReactiveExtension;
-using RethinkDb.Driver.Ast;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RethinkDbApp.Model;
 
 namespace Rethink
 {
@@ -19,17 +15,10 @@ namespace Rethink
         public IDbManager GetDbManager();
 
         /// <summary>
-        /// Metodo per gestire le notifiche sul Db
+        /// Gestore per la tabella "Notification", ha in se la funzionalità di query e di notificators apposta per la tabella Notification
         /// </summary>
-        /// <returns>Oggetto di gestione delle notifiche presenti sul db</returns>
+        /// <returns>Oggetto che ha in se le funzionalità di query e listening sulla tabella "Notification"</returns>
         public INotificationsManager GetNotificationsManager();
-
-        /// <summary>
-        /// Metodo per ottenere un notificatore di notifiche di un certo tipo specificato 
-        /// </summary>
-        /// <returns>Notificatore</returns>
-        public IRXNotifier<T> GetNotifier<T>() where T : Notification;
-
 
         /// <summary>
         /// Da chiamare ogni volta che si termina una sessione con Rethink per chiudere in sicurezza la connessione

@@ -1,10 +1,6 @@
 ﻿using Rethink.Model;
-using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
-using RethinkDb.Driver.Net.Clustering;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rethink.Connection
 {

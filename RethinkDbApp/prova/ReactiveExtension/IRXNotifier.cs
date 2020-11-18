@@ -1,9 +1,6 @@
 ﻿using Rethink.Model;
-using RethinkDb.Driver.Model;
 using RethinkDbApp.ReactiveExtension;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Rethink.ReactiveExtension
 {
@@ -20,11 +17,16 @@ namespace Rethink.ReactiveExtension
         public NotificationSubscription<T> ListenWithOneOfTheArguments(params string[] argsList);
 
         /// <summary>
-        /// Si smette di rimanere in ascolto sulla tabella Notifiche
+        /// Smette di rimanere in ascolto sull'observervable con id passato in input
         /// </summary>
+        /// <param name="id">id dell'observable</param>
         public void StopListening(Guid id);
 
-        public void StopListening(NotificationSubscription<T> pair);//coppia
+        /// <summary>
+        /// Smette di rimanere in ascolto sull'observervable
+        /// </summary>
+        /// <param name="notificationSubscription">coppia Guid-observable</param>
+        public void StopListening(NotificationSubscription<T> notificationSubscription);
 
 
     }
