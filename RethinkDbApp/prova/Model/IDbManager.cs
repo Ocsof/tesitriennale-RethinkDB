@@ -24,7 +24,7 @@ namespace Rethink.Model
         /// Elimina la tabella sul db specificato inizialmente
         /// </summary>
         /// <param name="tableName">Nome tabella da eliminare</param>
-        public void DelateTable(string tableName);
+        public void DeleteTable(string tableName);
 
         /// <summary>
         /// Restituisce gli indici della tabella richiesta
@@ -53,7 +53,7 @@ namespace Rethink.Model
         /// </summary>
         /// <param name="shards"></param>
         /// <param name="replicas"></param>
-        public void Reconfigure(int shards, int replicas);
+        public void Reconfigure(string tableName, int shards, int replicas);
 
         
         

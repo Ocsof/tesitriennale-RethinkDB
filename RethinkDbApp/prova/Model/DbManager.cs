@@ -1,5 +1,6 @@
 ﻿using Rethink.Connection;
 using RethinkDb.Driver;
+using RethinkDbApp.Exception;
 using System.Linq;
 
 namespace Rethink.Model
@@ -9,11 +10,13 @@ namespace Rethink.Model
         private readonly IConnectionNodes connection;
         private readonly static RethinkDB R = RethinkDB.R;
         private readonly string dbName;
+        private string[] wellKnowns;
 
-        public DbManager(IConnectionNodes connection)  //IConnectionPooling connectionFactory  // ---> per connessione con un cluster + nodi
+        public DbManager(IConnectionNodes connection, string[] wellKnown)  //IConnectionPooling connectionFactory  // ---> per connessione con un cluster + nodi
         {
             this.connection = connection;
             this.dbName = connection.GetNodi().ElementAt(0).Database;
+            this.wellKnowns = wellKnown;
         }
 
         public string GetTablesList()
@@ -27,6 +30,7 @@ namespace Rethink.Model
         public void CreateTable(string tableName)
         {
             var conn = this.connection.GetConnection();
+
             var exists = R.Db(dbName).TableList().Contains(t => t == tableName).Run(conn);
             if (!exists)
             {
@@ -35,8 +39,12 @@ namespace Rethink.Model
             }
         }
 
-        public void DelateTable(string tableName)
+        public void DeleteTable(string tableName)
         {
+            if (wellKnowns.Contains(tableName))
+            {
+                throw new DeleteTableSystemException(tableName);
+            }
             var conn = this.connection.GetConnection();
             var exists = R.Db(this.dbName).TableList().Contains(t => t == tableName).Run(conn);
             if (exists)
@@ -44,46 +52,69 @@ namespace Rethink.Model
                 R.Db(this.dbName).TableDrop(tableName).Run(conn);
             }
         }
+
         public string GetIndexList(string tableName) 
         {
             var conn = this.connection.GetConnection();
-            var indexList = R.Db(this.dbName).Table(tableName).IndexList().Run(conn);
-
-            return indexList.ToString();
+            try
+            {
+                var indexList = R.Db(this.dbName).Table(tableName).IndexList().Run(conn);
+                return indexList.ToString();
+            }
+            catch (ReqlOpFailedError)
+            {
+                throw new TableNotFoundException(tableName);
+            }
         }
+
         public void CreateIndex(string tableName, string indexName)
         {
             var conn = this.connection.GetConnection();
-            var exists = R.Db(this.dbName).Table(tableName).IndexList().Contains(t => t == indexName).Run(conn);
-            if (!exists)
+            try
             {
-                R.Db(this.dbName).Table(tableName).IndexCreate(indexName).Run(conn);
-                R.Db(this.dbName).Table(tableName).IndexWait(indexName).Run(conn);
+                var exists = R.Db(this.dbName).Table(tableName).IndexList().Contains(t => t == indexName).Run(conn);
+                if (!exists)
+                {
+                    R.Db(this.dbName).Table(tableName).IndexCreate(indexName).Run(conn);
+                    R.Db(this.dbName).Table(tableName).IndexWait(indexName).Run(conn);
+                }
+            }
+            catch (ReqlOpFailedError)
+            {
+                throw new TableNotFoundException(tableName);
             }
         }
 
         public void DeleteIndex(string tableName, string indexName)
         {
             var conn = this.connection.GetConnection();
-            var exists = R.Db(this.dbName).Table(tableName).IndexList().Contains(t => t == indexName).Run(conn);
-            if (exists)
+            try
             {
-                R.Db(this.dbName).Table(tableName).IndexDrop(indexName).Run(conn);
+                var exists = R.Db(this.dbName).Table(tableName).IndexList().Contains(t => t == indexName).Run(conn);
+                if (exists)
+                {
+                    R.Db(this.dbName).Table(tableName).IndexDrop(indexName).Run(conn);
+                }
+            }
+            catch (ReqlOpFailedError)
+            {
+                throw new TableNotFoundException(tableName);
             }
         }
 
-        public void Reconfigure(int shards, int replicas)
+        public void Reconfigure(string tableName, int shards, int replicas)
         {
             var conn = this.connection.GetConnection();
-            var tables = R.Db(this.dbName).TableList().Run(conn);
-            foreach (string table in tables)
+            try
             {
-                R.Db(this.dbName).Table(table).Reconfigure().OptArg("shards", shards).OptArg("replicas", replicas).Run(conn);
-                R.Db(this.dbName).Table(table).Wait_().Run(conn);
+                R.Db(this.dbName).Table(tableName).Reconfigure().OptArg("shards", shards).OptArg("replicas", replicas).Run(conn);
+                R.Db(this.dbName).Table(tableName).Wait_().Run(conn);
+            }
+            catch (ReqlOpFailedError)
+            {
+                throw new TableNotFoundException(tableName);
             }
         }
-
-  
-
+ 
     }
 }

@@ -4,7 +4,7 @@ using RethinkDbApp.Model;
 namespace Rethink
 {
     /// <summary>
-    /// Libreria per la gestione del Db, della tabella "Notifiche" e per rimanere in ascolto sui cambiamenti della tabella "Notifications"
+    /// Libreria per la gestione del Db Rethink, della tabella "Notifiche" e per rimanere in ascolto sui cambiamenti della tabella "Notifications"
     /// </summary>
     public interface IUtilityRethink
     {       

@@ -28,7 +28,6 @@ namespace Rethink
             var dbManager = utilityRethink.GetDbManager();
             var queryToNotifications = utilityRethink.GetNotificationsManager().GetQueryService();
             
-
             /********** Test Connettività **********/
 
             Console.WriteLine("************ Test Connettività *************");
@@ -46,45 +45,64 @@ namespace Rethink
             Console.WriteLine("************ Test DbManager *************");
             Console.WriteLine();
 
-            dbManager.CreateTable("Notifications");
-            dbManager.CreateTable("Notifications");
             Console.WriteLine("Table List: " + dbManager.GetTablesList());
-            //store.DelateTable("Notifications"); 
+            //dbManager.DeleteTable("Notifications"); 
             dbManager.CreateIndex("Notifications", "Date");
-            Console.WriteLine("Index List: " + dbManager.GetIndexList("Notification")); //Notifications
+            Console.WriteLine("Index List: " + dbManager.GetIndexList("Notifications")); //Notifications
             dbManager.DeleteIndex("Notifications", "Date");
-            Console.WriteLine("Index List: " + dbManager.GetIndexList("Notification")); //Notifications
-            //dbManager.Reconfigure(2, 3);
+            Console.WriteLine("Index List: " + dbManager.GetIndexList("Notifications")); //Notifications
+            //dbManager.Reconfigure("Notifications", 2, 3);
 
             Console.WriteLine();
 
             /***********************************************************************************************************************************
             ******************************************* Test NotificationsManager **********************************************************
             **********************************************************************************************************************************/
-
+           
             /*
-            Guid id2 = new Guid("0911b379-5ca2-4ec0-a32e-da1568defa62");
+            Guid id2 = new Guid("5f4021f6-76ea-48e5-a712-8f73c3ca6aef");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("21f6831a-aded-4979-b28b-eef3e8fca03c");
+            id2 = new Guid("8b803965-afcc-439a-be0a-275731f1a9c5");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("5b8333d0-31f8-4231-9245-595bfe44c8ff");
+            id2 = new Guid("96f42dba-5a45-42f2-a4af-f5a423200828");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("5a2266b7-7003-4fac-aa15-402a9fbcd5d1");
-            queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("9e5b5586-1c7e-4903-8424-2f5c8cfa4328");
-            queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("ca14e408-bd83-4154-b815-9e321a0b9970");
-            queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("dd5b1215-7f39-42ab-bc4b-103fea7b8ef9");
-            queryToNotifications.DeleteNotification(id2);
+                        
+            NotificationNewData notificationNewData1 = new NotificationNewData
+            {
+                Id = Guid.NewGuid(),
+                Date = new DateTime(2020, 11, 16),
+                Text = CreateRandomString(),
+                Arg = CreateRandomString(),
+                Table = CreateRandomString()
+            };
+            NotificationNewData notificationNewData2 = new NotificationNewData
+            {
+                Id = Guid.NewGuid(),
+                Date = new DateTime(2020, 11, 16),
+                Text = CreateRandomString(),
+                Arg = CreateRandomString(),
+                Table = CreateRandomString()
+            };
+            NotificationExec notificationExecution1 = new NotificationExec
+            {
+                Id = Guid.NewGuid(),
+                Date = new DateTime(2020, 11, 16), 
+                Text = CreateRandomString(),
+                Arg = CreateRandomString(),
+                IdExec = Guid.NewGuid()
+            };
+            queryToNotifications.NewNotification(notificationNewData1);
+            queryToNotifications.NewNotification(notificationNewData2);
+            queryToNotifications.NewNotification(notificationExecution1);
             */
+
 
             Console.WriteLine("****************** Test NotificationsManager ***************");
             Console.WriteLine();
 
             //per eliminare una notifica in particolare
             Guid id = new Guid("03c0f735-0a30-4101-a116-bf29b4b364e9");
-            queryToNotifications.DeleteNotification(id);  //in questo caso non esiste quindi non te lo fa
+            //queryToNotifications.DeleteNotification(id);  //in questo caso non esiste quindi non te lo fa
 
             //********Test di NewNotification(notification), DeleteNotification(id) *******/
             IList<Guid> idList = MultiInsertNotifications(queryToNotifications);

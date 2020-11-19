@@ -16,6 +16,7 @@ namespace Rethink
         private readonly IConnectionNodes connection;
         private readonly INotificationsManager notificationsManager;
         private readonly IDbManager dbManager;
+        private readonly List<string> WellKnownTables = new List<string>();
 
         /// <summary>
         /// Connettere l'app al cluster Rethinkdb in esecuzione
@@ -30,9 +31,17 @@ namespace Rethink
                 listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 20 });
             }
             this.connection = new ConnectionNodes(listNodi);
-            this.dbManager = new DbManager(this.connection);
-            this.notificationsManager = new NotificationsManager(this.connection);       
+            
+            //vari manager supportati
+            this.notificationsManager = new NotificationsManager(this.connection);
+            this.WellKnownTables.Add(notificationsManager.GetWellKnownTable());
+            //..altri ?
+
+            this.dbManager = new DbManager(this.connection,this.WellKnownTables.ToArray());
             this.CreateDb(dbName);
+
+            //per ogni manager con tabelle "note"
+            this.dbManager.CreateTable(INotificationsManager.TABLE);
         }
 
         /// <summary>

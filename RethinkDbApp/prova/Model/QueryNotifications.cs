@@ -3,6 +3,7 @@ using RethinkDb.Driver;
 using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
 using RethinkDbApp.Exception;
+using RethinkDbApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,13 @@ namespace Rethink.Model
         {
             this.connection = connection;
             this.dbName = connection.GetNodi().ElementAt(0).Database;
-            this.tableName = "Notifications"; 
+            this.tableName = INotificationsManager.TABLE; 
         }
 
         public void NewNotification<T>(T notification) where T : Notification
         {
             var conn = this.connection.GetConnection();
-
+            
             Cursor<T> all = R.Db(this.dbName).Table(this.tableName)
                 .GetAll(notification.Id)//[new { index = nameof(Post.title) }]
                 .Run<T>(conn);
@@ -39,7 +40,6 @@ namespace Rethink.Model
             }
             else
             {
-                //notification.Type = typeof(T).Name;
                 // insert
                 R.Db(this.dbName).Table(this.tableName)
                     .Insert(notification)
@@ -50,6 +50,7 @@ namespace Rethink.Model
         public void DeleteNotification(Guid id)
         {
             var conn = this.connection.GetConnection();
+            
             R.Db(this.dbName).Table(this.tableName).Get(id).Delete().Run(conn);
         }
 

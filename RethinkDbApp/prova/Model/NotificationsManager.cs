@@ -8,13 +8,19 @@ namespace RethinkDbApp.Model
     {
         private readonly IConnectionNodes connection;
         private readonly IQueryNotifications queryToNotifications;
+        
 
         public NotificationsManager(IConnectionNodes connection)
         {
             this.connection = connection;
             this.queryToNotifications = new QueryNotifications(connection);
         }
-
+        
+        public string GetWellKnownTable()
+        {
+            return INotificationsManager.TABLE;
+        }
+        
         public IQueryNotifications GetQueryService()
         {
             return this.queryToNotifications;
@@ -25,5 +31,7 @@ namespace RethinkDbApp.Model
             IRXNotifier<T> rxNotifier = new RXNotifier<T>(this.connection);
             return rxNotifier;
         }
+
+        
     }
 }

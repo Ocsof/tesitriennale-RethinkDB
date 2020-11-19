@@ -4,6 +4,7 @@ using RethinkDb.Driver;
 using RethinkDb.Driver.Model;
 using RethinkDb.Driver.Net;
 using RethinkDbApp.Exception;
+using RethinkDbApp.Model;
 using RethinkDbApp.ReactiveExtension;
 using System;
 using System.Collections.Concurrent;
@@ -19,12 +20,14 @@ namespace Rethink.ReactiveExtension
         private readonly string dbName;
         private readonly static RethinkDB R = RethinkDB.R;
         private readonly ConcurrentDictionary<Guid, Cursor<Change<T>>> changesDict;  //dizionario Thread safe
+        private readonly string tableName;
 
         public RXNotifier(IConnectionNodes rethinkDbConnection) //IConnectionPooling
         {
             this.rethinkDbConnection = rethinkDbConnection;
             this.dbName = this.rethinkDbConnection.GetNodi().ElementAt(0).Database;
             changesDict = new ConcurrentDictionary<Guid, Cursor<Change<T>>>();
+            this.tableName = INotificationsManager.TABLE;
         }
 
 

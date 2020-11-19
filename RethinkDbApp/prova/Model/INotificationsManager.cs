@@ -4,10 +4,11 @@ using Rethink.ReactiveExtension;
 namespace RethinkDbApp.Model
 {
     /// <summary>
-    /// 
+    /// Manager delle Notifiche ---> Query Notifiche e Listener sulle Notifiche
     /// </summary>
-    public interface INotificationsManager
+    public interface INotificationsManager : IManager
     {
+        public const string TABLE = "Notifications";
         /// <summary>
         /// Metodo per gestire le notifiche sul Db
         /// </summary>
@@ -17,7 +18,7 @@ namespace RethinkDbApp.Model
         /// <summary>
         /// Metodo per ottenere un notificatore di notifiche di un certo tipo specificato 
         /// </summary>
-        /// <returns>Notificatore</returns>
+        /// <returns>Listener di eventi su tabella "Notification"</returns>
         public IRXNotifier<T> GetNotifier<T>() where T : Notification;
     }
 }
