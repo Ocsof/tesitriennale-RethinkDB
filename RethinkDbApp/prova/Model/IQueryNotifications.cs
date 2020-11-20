@@ -52,7 +52,7 @@ namespace Rethink.Model
         /// </summary>
         /// <typeparam name="T">Deve essere una classe che eredita dalla classe astratta "Notification"</typeparam>
         /// <param name="arg">Argomento richiesto</param>
-        /// <returns></returns>
+        /// <returns>Lista di notifiche con quel arg</returns>
         public IList<T> GetNotificationsWithArg<T>(String arg) where T : Notification;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace RethinkDbApp.Exception
 {
+    /// <summary>
+    /// Se il Guid non è presente sul db Rethink
+    /// </summary>
     [Serializable]
     public class GetGuidException : System.Exception
     {

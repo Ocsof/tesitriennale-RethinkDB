@@ -10,7 +10,10 @@ using System.Linq;
 
 namespace Rethink.Model
 {
-    class QueryNotifications: IQueryNotifications
+    /// <summary>
+    /// Implementazione di IQueryNotifications che interroga tabella di sistema "INotificationsManager.TABLE";
+    /// </summary>
+    class QueryNotifications : IQueryNotifications
     {
         private readonly IConnectionNodes connection;
         private readonly static RethinkDB R = RethinkDB.R;

@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
-using RethinkDb.Driver.Ast;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Rethink.Model
 {
     public abstract class Notification
     {
+        /// <summary>
+        /// Notifica base
+        /// </summary>
         protected Notification()
         {
             this.Type = this.GetType().Name;  //Uso della Reflection --> Assegno a type una stringa che rappresenta il nome della classe

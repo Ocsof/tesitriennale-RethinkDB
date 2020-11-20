@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RethinkDbApp.Exception
 {
+    /// <summary>
+    /// Se si tenta di eliminare una tabella di sistema
+    /// </summary>
     [Serializable]
     class DeleteTableSystemException : System.Exception
     {

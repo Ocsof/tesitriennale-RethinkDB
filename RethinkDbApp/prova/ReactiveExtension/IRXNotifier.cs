@@ -5,7 +5,7 @@ using System;
 namespace Rethink.ReactiveExtension
 {
     /// <summary>
-    /// Notificatore di eventi su tabella "Notifications"
+    /// Notificatore di eventi sulla tabella delle notifiche
     /// </summary>
     public interface IRXNotifier<T> where T : Notification
     {
@@ -14,6 +14,7 @@ namespace Rethink.ReactiveExtension
         /// Rimane in ascolto solo per le notifiche che hanno uno degli argomenti della lista
         /// </summary>
         /// <param name="arg">argomenti delle notifiche su cui rimanere in ascolto</param>
+        /// <returns>Coppia guid-observable di notifiche</returns>
         public NotificationSubscription<T> ListenWithOneOfTheArguments(params string[] argsList);
 
         /// <summary>

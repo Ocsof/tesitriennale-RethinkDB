@@ -1,5 +1,4 @@
 ﻿using Rethink.Model;
-using RethinkDb.Driver;
 using RethinkDb.Driver.Model;
 using RethinkDbApp.ReactiveExtension;
 using System;
@@ -7,7 +6,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,7 +49,7 @@ namespace Rethink
             Console.WriteLine("Index List: " + dbManager.GetIndexList("Notifications")); //Notifications
             dbManager.DeleteIndex("Notifications", "Date");
             Console.WriteLine("Index List: " + dbManager.GetIndexList("Notifications")); //Notifications
-            //dbManager.Reconfigure("Notifications", 2, 3);
+            //dbManager.ReconfigureTable("Notifications", 2, 3);
 
             Console.WriteLine();
 
@@ -60,16 +58,19 @@ namespace Rethink
             **********************************************************************************************************************************/
            
             /*
-            Guid id2 = new Guid("5f4021f6-76ea-48e5-a712-8f73c3ca6aef");
+            Guid id2 = new Guid("1c6315b6-b67d-4b94-804a-f47f186033f0");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("8b803965-afcc-439a-be0a-275731f1a9c5");
+            id2 = new Guid("36d5f818-d8dc-4faf-8358-7c411bf74ea4");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("96f42dba-5a45-42f2-a4af-f5a423200828");
+            id2 = new Guid("5f726e61-b9aa-4437-8c12-4700428066ee");
             queryToNotifications.DeleteNotification(id2);
-                        
+            */
+            
+            
+            /*
             NotificationNewData notificationNewData1 = new NotificationNewData
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("5ad2fea8-cff8-462b-8f5d-794bd8cc7edd"),
                 Date = new DateTime(2020, 11, 16),
                 Text = CreateRandomString(),
                 Arg = CreateRandomString(),

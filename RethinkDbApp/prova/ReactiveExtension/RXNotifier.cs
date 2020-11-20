@@ -14,6 +14,9 @@ using System.Threading;
 
 namespace Rethink.ReactiveExtension
 {
+    /// <summary>
+    /// Implementazione di IRXNotifier che interroga la tabella di sistema "INotificationsManager.TABLE";
+    /// </summary>
     class RXNotifier<T> : IRXNotifier<T> where T: Notification
     {
         private readonly IConnectionNodes rethinkDbConnection;
@@ -35,7 +38,7 @@ namespace Rethink.ReactiveExtension
         {      
             var conn = this.rethinkDbConnection.GetConnection();
             
-            var changes = R.Db(dbName).Table("Notifications")
+            var changes = R.Db(dbName).Table(this.tableName)
              .Filter(notification => 
                 R.Expr(R.Array(argsList.ToArray())).Contains(notification.G("Arg"))
              )

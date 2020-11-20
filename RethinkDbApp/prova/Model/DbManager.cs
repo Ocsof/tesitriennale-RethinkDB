@@ -102,7 +102,7 @@ namespace Rethink.Model
             }
         }
 
-        public void Reconfigure(string tableName, int shards, int replicas)
+        public void ReconfigureTable(string tableName, int shards, int replicas)
         {
             var conn = this.connection.GetConnection();
             try

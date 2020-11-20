@@ -2,6 +2,9 @@
 
 namespace RethinkDbApp.Exception
 {
+    /// <summary>
+    /// Se non ci si riesce a connettere con il server Rethink in un tempo ragionevole (oltre il Timeout)
+    /// </summary>
     [Serializable]
     public class ConnectionFailureException : System.Exception
     {

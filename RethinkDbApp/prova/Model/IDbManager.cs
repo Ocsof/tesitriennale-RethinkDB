@@ -36,7 +36,6 @@ namespace Rethink.Model
         /// <summary>
         /// Crea Indice su un campo di una tabella di un db
         /// </summary>
-        /// <param name="dbName">Nome db</param>
         /// <param name="tableName">Nome tabella</param>
         /// <param name="indexName">Nome Indice da creare</param>
         public void CreateIndex(string tableName, string indexName);
@@ -51,9 +50,10 @@ namespace Rethink.Model
         /// <summary>
         /// Riconfigura il numero di shard e di repliche per ogni tabella sul db
         /// </summary>
-        /// <param name="shards"></param>
+        /// /// <param name="tableName">Nome tabella</param>
+        /// <param name="shards">Numero di Shards da impostare</param>
         /// <param name="replicas"></param>
-        public void Reconfigure(string tableName, int shards, int replicas);
+        public void ReconfigureTable(string tableName, int shards, int replicas);
 
         
         

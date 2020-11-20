@@ -1,25 +1,22 @@
 ﻿using Rethink.Model;
 using RethinkDb.Driver.Model;
-using RethinkDb.Driver.Net;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RethinkDbApp.ReactiveExtension
 {
     /// <summary>
-    /// Classe che accoppia un observable con un Guid
+    /// Classe che accoppia un "observable di notifiche" con un Guid
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class NotificationSubscription<T> where T: Notification
     {
         /// <summary>
-        /// id
+        /// Guid
         /// </summary>
         public Guid Guid { get; }
 
         /// <summary>
-        /// observable
+        /// Observable di notifiche
         /// </summary>
         public IObservable<Change<T>> Observable { get; }
 

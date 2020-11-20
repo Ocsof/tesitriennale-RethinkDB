@@ -7,9 +7,9 @@ namespace Rethink.Connection
     interface IConnectionNodes
     {
         /// <summary>
-        /// Crea nuova connessione verso il server, se dopo 20 secondi non si è riuscito a connettere viene segnalato un'errore
+        /// Ritorna la connessione verso il server
         /// </summary>
-        /// <returns></returns>
+        /// <returns>La connessione</returns>
         public IConnection GetConnection();
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Rethink.Connection
         /// <summary>
         /// Ritorna i Nodi Del Cluster
         /// </summary>
-        /// <returns></returns>
+        /// <returns>I nodi Rethink presenti sul server</returns>
         public IList<DbOptions> GetNodi();
      
     }

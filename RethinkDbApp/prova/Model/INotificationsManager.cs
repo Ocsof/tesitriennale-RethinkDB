@@ -8,7 +8,7 @@ namespace RethinkDbApp.Model
     /// </summary>
     public interface INotificationsManager : IManager
     {
-        public const string TABLE = "Notifications";
+        public const string TABLE = "Notifications";  //Nome della tabella su Rethink
         /// <summary>
         /// Metodo per gestire le notifiche sul Db
         /// </summary>

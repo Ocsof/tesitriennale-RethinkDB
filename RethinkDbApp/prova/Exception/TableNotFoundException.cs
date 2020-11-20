@@ -2,6 +2,9 @@
 
 namespace RethinkDbApp.Exception
 {
+    /// <summary>
+    /// Se la Tabella non esiste o non è stata trovata sul db Rethink
+    /// </summary>
     [Serializable]
     class TableNotFoundException : System.Exception
     {

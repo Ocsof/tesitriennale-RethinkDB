@@ -2,6 +2,9 @@
 
 namespace RethinkDbApp.Exception
 {
+    /// <summary>
+    /// Se il Guid creato è già presente
+    /// </summary>
     [Serializable]
     public class NewGuidException : System.Exception
     {

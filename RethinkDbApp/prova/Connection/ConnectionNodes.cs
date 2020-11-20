@@ -6,8 +6,7 @@ using RethinkDbApp.Exception;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml;
+
 
 namespace Rethink.Connection
 {
@@ -27,8 +26,7 @@ namespace Rethink.Connection
         {
             if (conn == null)
             {
-                //Ok per single connection
-                var R = RethinkDb.Driver.RethinkDB.R;
+                var R = RethinkDB.R;
                 string[] nodi = new string[this.listNodi.Count];
                 int position = 0;
                 foreach(DbOptions node in listNodi)
