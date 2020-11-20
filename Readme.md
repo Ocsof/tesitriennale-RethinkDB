@@ -13,7 +13,7 @@ Docker-RethinkDbDueNodi : 2 nodi,
 Docker-RethinkDbUnNodo : 1 nodo.
 
 Una volta scelto, eseguire i seguenti comandi, validi per tutti e 3 i casi:
-- "docker-compose -f docker-compose.yml build" per costruire l'immagine --> è necessario usarlo solo la prima volta, una volta eseguito il comando l'immagine viene "salvata"
+- "docker-compose -f docker-compose.yml build" per costruire l'immagine --> è necessario usarlo solo la prima volta, una volta eseguito il comando l'immagine viene "salvata".
 -"docker-compose -f docker-compose.yml up -d" per mettere in esecuzione il cluster. 
 
 Aprire un browser e digitare "proprioIndirizzoDiRete:8081", su questa porta infatti in tutti e tre i casi c'è un nodo Rethink in ascolto.
