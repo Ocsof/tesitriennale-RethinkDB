@@ -8,8 +8,9 @@ Attenzione!! Ora La parte Docker (Cluster rethinkdb) funziona anche su windows.
 
 Aprire un terminale e dirigersi sulla cartella Cluster_Docker_rethinkdb.
 E' possibile ora scegliere, in base alle proprie esigenze, di utilizzare un Cluster Rethinkdb a 1, 2 o 5 nodi andando via terminale sulla cartella corrispondente:
-- Docker-RethinkdbCluster : 5 nodi,
-- Docker-RethinkDbDueNodi : 2 nodi,
+
+- Docker-RethinkdbCluster : 5 nodi.
+- Docker-RethinkDbDueNodi : 2 nodi.
 - Docker-RethinkDbUnNodo : 1 nodo.
 
 Una volta scelto, eseguire i seguenti comandi, validi per tutti e 3 i casi:
