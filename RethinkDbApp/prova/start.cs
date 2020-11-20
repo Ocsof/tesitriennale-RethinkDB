@@ -16,7 +16,8 @@ namespace Rethink
 
         //static void Main(string[] args)
         static async Task Main(string[] args)
-        {           
+        {    
+            //cambiare 192.168.7.47 con il proprio indirizzo       
             IList<string> hostPortsNodiCluster = new List<String>() { "192.168.7.47:28016", "192.168.7.47:28017", "192.168.7.47:28018", "192.168.7.47:28019", "192.168.7.47:28020" };
             IList<string> hostPortsTwoNodi = new List<String>() { "192.168.7.47:28016", "192.168.7.47:28017" };
             IList<string> hostPortsOneNode = new List<String>() { "192.168.7.47:28016" };
