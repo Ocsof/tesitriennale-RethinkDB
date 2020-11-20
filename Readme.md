@@ -8,14 +8,14 @@ Attenzione!! Ora La parte Docker (Cluster rethinkdb) funziona anche su windows.
 
 Aprire un terminale e dirigersi sulla cartella Cluster_Docker_rethinkdb.
 E' possibile ora scegliere, in base alle proprie esigenze, di utilizzare un Cluster Rethinkdb a 1, 2 o 5 nodi andando via terminale sulla cartella corrispondente:
-Docker-RethinkdbCluster : 5 nodi,
-Docker-RethinkDbDueNodi : 2 nodi,
-Docker-RethinkDbUnNodo : 1 nodo.
+- Docker-RethinkdbCluster : 5 nodi,
+- Docker-RethinkDbDueNodi : 2 nodi,
+- Docker-RethinkDbUnNodo : 1 nodo.
 
 Una volta scelto, eseguire i seguenti comandi, validi per tutti e 3 i casi:
 
 - "docker-compose -f docker-compose.yml build" per costruire l'immagine --> è necessario usarlo solo la prima volta, una volta eseguito il comando l'immagine viene "salvata".
--"docker-compose -f docker-compose.yml up -d" per mettere in esecuzione il cluster. 
+- "docker-compose -f docker-compose.yml up -d" per mettere in esecuzione il cluster. 
 
 Aprire un browser e digitare "proprioIndirizzoDiRete:8081", su questa porta infatti in tutti e tre i casi c'è un nodo Rethink in ascolto.
 Nel caso a due nodi è possibile digitare anche "proprioIndirizzoDiRete:8082".
