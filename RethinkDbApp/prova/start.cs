@@ -57,14 +57,14 @@ namespace Rethink
             ******************************************* Test NotificationsManager **********************************************************
             **********************************************************************************************************************************/
            
-            /*
-            Guid id2 = new Guid("1c6315b6-b67d-4b94-804a-f47f186033f0");
+            
+            Guid id2 = new Guid("4daf8515-9bd9-4ce0-826a-78a6bcf4360a");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("36d5f818-d8dc-4faf-8358-7c411bf74ea4");
+            id2 = new Guid("4de99e50-4342-481b-b211-87e64544def8");
             queryToNotifications.DeleteNotification(id2);
-            id2 = new Guid("5f726e61-b9aa-4437-8c12-4700428066ee");
+            id2 = new Guid("f52e404a-a080-44a5-b4c6-e7590d7021d0");
             queryToNotifications.DeleteNotification(id2);
-            */
+            
             
             
             /*
