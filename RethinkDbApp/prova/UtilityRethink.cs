@@ -17,6 +17,7 @@ namespace Rethink
         private readonly INotificationsManager notificationsManager;
         private readonly IDbManager dbManager;
         private readonly List<string> WellKnownTables = new List<string>();
+        private readonly IList<DbOptions> listNodi;
 
         /// <summary>
         /// Connettere l'app al cluster Rethinkdb in esecuzione
@@ -25,7 +26,7 @@ namespace Rethink
         /// <param name="hostsPorts">Lista di stringhe del tipo: "indirizzoip:porta"</param>
         public UtilityRethink(string dbName, IList<String> hostsPorts)
         {
-            IList<DbOptions> listNodi = new List<DbOptions>();
+            this.listNodi = new List<DbOptions>();
             foreach (String hostPort in hostsPorts)
             {
                 listNodi.Add(new DbOptions { Database = dbName, HostPort = hostPort, Timeout = 20 });
