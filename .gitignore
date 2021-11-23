@@ -8,13 +8,10 @@
 
 
 
-RethinkDbApp/rethink-lib/bin
-RethinkDbApp/rethink-client/bin
-RethinkDbApp/rethink-test/bin
+RethinkDbApp/prova/bin
 RethinkDbApp/.vs/RethinkDbApp/v16/.suo
-RethinkDbApp/rethink-lib/obj/
-RethinkDbApp/rethink-client/obj/
-RethinkDbApp/rethink-client/obj/
+RethinkDbApp/prova/obj/
+
 
 
 
