@@ -1,3 +1,3 @@
-FROM rethinkdb:2.3.5
+FROM --platform=linux/amd64 rethinkdb:latest
 
 

@@ -18,10 +18,10 @@ namespace Rethink
         static async Task Main(string[] args)
         {    
             //cambiare 192.168.7.47 con il proprio indirizzo       
-            IList<string> hostPortsNodiCluster = new List<String>() { "192.168.7.47:28016", "192.168.7.47:28017", "192.168.7.47:28018", "192.168.7.47:28019", "192.168.7.47:28020" };
-            IList<string> hostPortsTwoNodi = new List<String>() { "192.168.7.47:28016", "192.168.7.47:28017" };
-            IList<string> hostPortsOneNode = new List<String>() { "192.168.7.47:28016" };
-            IUtilityRethink utilityRethink = new UtilityRethink("test", hostPortsNodiCluster);
+            IList<string> hostPortsNodiCluster = new List<String>() { "192.168.1.57:28016", "192.168.1.57:28017", "192.168.1.57:28018", "192.168.1.57:28019", "192.168.1.57:28020" };
+            IList<string> hostPortsTwoNodi = new List<String>() { "192.168.1.57:28016", "192.168.1.57:28017" };
+            IList<string> hostPortsOneNode = new List<String>() { "192.168.1.57:28016" };
+            IUtilityRethink utilityRethink = new UtilityRethink("test", hostPortsOneNode);
 
             var dbManager = utilityRethink.GetDbManager();
             var queryToNotifications = utilityRethink.GetNotificationsManager().GetQueryService();
@@ -32,7 +32,7 @@ namespace Rethink
             Console.WriteLine();
 
             HttpClient client = new HttpClient();
-            var resp = await client.GetAsync("http://192.168.7.47:8081");
+            var resp = await client.GetAsync("http://192.168.1.57:8081");
             Console.WriteLine(resp.StatusCode);
 
             Console.WriteLine();

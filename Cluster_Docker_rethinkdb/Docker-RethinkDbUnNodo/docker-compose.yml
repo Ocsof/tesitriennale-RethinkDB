@@ -4,6 +4,7 @@ version: "3"
 
 services:
   rethinkdb1:
+    platform: linux/amd64
     build: ./rethinkdb
     hostname: rethinkdb1
     networks:

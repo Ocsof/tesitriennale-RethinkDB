@@ -4,6 +4,7 @@ version: "3"
 
 services:
   rethinkdb1:
+    platform: linux/amd64
     build: ./rethinkdb
     environment:
       - "DBCLUSTERHOSTS=rethinkdb2"
@@ -15,6 +16,7 @@ services:
       - "8081:8080"
       - "28016:28015"
   rethinkdb2:
+    platform: linux/amd64
     build: ./rethinkdb
     environment:
       - "DBCLUSTERHOSTS=rethinkdb1"
